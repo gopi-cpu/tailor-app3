@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tailor Wala — V1</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b2a3a;
+    --ink-soft:#2c4258;
+    --paper:#f7f3ec;
+    --card:#ffffff;
+    --marigold:#e8871e;
+    --marigold-dark:#c76f12;
+    --red:#c1443c;
+    --red-bg:#fbe3e1;
+    --leaf:#3f8f5f;
+    --leaf-bg:#e1f2e7;
+    --sky:#3a6ea5;
+    --sky-bg:#e2edf7;
+    --sand:#f0dfc0;
+    --sand-text:#96691f;
+    --border:#e8e1d3;
+    --gray:#867f72;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+  h1,h2,h3,.display{font-family:'Oswald',sans-serif;letter-spacing:.3px;}
+  body{background:#e2dcce;}
+  .container{max-width:420px;margin:0 auto;background:var(--paper);min-height:100vh;position:relative;box-shadow:0 0 40px rgba(0,0,0,.2);overflow-x:hidden;}
+  .screen{display:none;padding-bottom:90px;}
+  .active{display:block;}
+
+  .devnav{display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:#0f1720;position:sticky;top:0;z-index:200;font-size:9px;}
+  .devnav div{flex:1 1 31%;text-align:center;color:#f7f3ec;border:1px solid var(--marigold);border-radius:4px;padding:5px 3px;cursor:pointer;font-weight:600;}
+
+  .tape-strip{height:9px;background-image:repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 13px);opacity:.14;}
+
+  header{background:var(--ink);color:#fff;padding:20px 20px 24px;position:relative;}
+  .header-row{display:flex;align-items:center;gap:10px;}
+  .header-row .hd-right{margin-left:auto;display:flex;gap:8px;}
+  .hd-icon-btn{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;}
+  .logo-mark{width:36px;height:36px;border-radius:9px;background:var(--marigold);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--ink);font-size:16px;}
+  .brand{font-family:'Oswald',sans-serif;font-weight:700;font-size:19px;letter-spacing:1px;text-transform:uppercase;}
+  .greeting{font-size:13px;color:#b9c3cf;margin-top:8px;font-weight:500;}
+  .back-btn{color:#fff;font-size:15px;cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.25);border-radius:8px;margin-bottom:10px;}
+  .page-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:17px;letter-spacing:.4px;}
+  .page-sub{font-size:12px;color:#b9c3cf;margin-top:3px;}
+  .loc-bar{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;margin-top:14px;font-size:12.5px;}
+  .loc-bar i{color:var(--marigold);}
+
+  .section-title{display:flex;justify-content:space-between;align-items:center;margin:22px 18px 12px;font-weight:700;font-size:14.5px;color:var(--ink);}
+  .section-title.display{font-family:'Oswald',sans-serif;text-transform:uppercase;font-size:13px;letter-spacing:.6px;color:var(--ink-soft);}
+  .view-all{font-size:12px;color:var(--marigold-dark);font-weight:700;cursor:pointer;}
+
+  .card{background:var(--card);border-radius:14px;padding:16px;margin:12px 16px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(27,42,58,.05);}
+
+  .pill{font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;white-space:nowrap;}
+  .pill-sand{background:var(--sand);color:var(--sand-text);}
+  .pill-sky{background:var(--sky-bg);color:var(--sky);}
+  .pill-leaf{background:var(--leaf-bg);color:var(--leaf);}
+  .pill-red{background:var(--red-bg);color:var(--red);}
+
+  .btn{display:block;width:100%;text-align:center;padding:15px;border-radius:12px;font-weight:700;font-size:14.5px;cursor:pointer;border:none;letter-spacing:.1px;}
+  .btn-primary{background:var(--marigold);color:#fff;}
+  .btn-primary:hover{background:var(--marigold-dark);}
+  .btn-outline{background:#fff;color:var(--ink);border:1.5px solid var(--border);}
+  .btn-ink{background:var(--ink);color:#fff;}
+  .btn-danger-outline{background:#fff;color:var(--red);border:1.5px solid var(--red-bg);}
+  .btn-sm{padding:10px;font-size:13px;border-radius:10px;}
+  .btn-row{display:flex;gap:10px;}
+  .btn-row .btn{flex:1;}
+
+  .nav-tabs{display:flex;justify-content:space-around;background:var(--card);padding:10px 0 14px;border-top:1px solid var(--border);position:fixed;bottom:0;width:100%;max-width:420px;z-index:100;}
+  .tab{text-align:center;color:var(--gray);font-size:10.5px;cursor:pointer;font-weight:600;}
+  .tab i{font-size:18px;display:block;margin-bottom:5px;}
+  .tab.active{color:var(--marigold-dark);}
+
+  .form-group{margin-bottom:15px;}
+  .form-label{display:block;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--ink);}
+  .form-input{width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff;color:var(--ink);}
+  .form-input:focus{border-color:var(--marigold);outline:none;}
+
+  /* home service tiles */
+  .service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 16px;}
+  .service-tile{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 8px;text-align:center;cursor:pointer;}
+  .service-tile .emoji{font-size:26px;display:block;margin-bottom:8px;}
+  .service-tile .lbl{font-weight:700;font-size:11.5px;color:var(--ink);}
+
+  /* chips */
+  .chip-row{display:flex;gap:8px;overflow-x:auto;padding:0 16px;margin:14px 0;}
+  .chip{flex-shrink:0;padding:9px 15px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;white-space:nowrap;}
+  .chip.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .chip i{margin-right:5px;}
+
+  /* option pick (type / date / time selection) */
+  .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 16px;}
+  .opt-tile{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:13px;text-align:center;font-weight:700;font-size:13px;color:var(--ink-soft);cursor:pointer;}
+  .opt-tile.selected{border-color:var(--marigold);background:#fdf2e3;color:var(--marigold-dark);}
+
+  .stepper-qty{display:flex;align-items:center;justify-content:center;gap:20px;padding:10px 0;}
+  .qty-btn{width:38px;height:38px;border-radius:10px;background:var(--card);border:1.5px solid var(--border);font-size:16px;font-weight:700;color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .qty-val{font-size:22px;font-weight:800;color:var(--ink);min-width:30px;text-align:center;}
+
+  .radio-line{display:flex;align-items:center;gap:12px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:13px 15px;margin:10px 16px;cursor:pointer;}
+  .radio-line.selected{border-color:var(--marigold);background:#fdf2e3;}
+  .radio-dot2{width:19px;height:19px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;position:relative;}
+  .radio-line.selected .radio-dot2{border-color:var(--marigold);}
+  .radio-line.selected .radio-dot2::after{content:'';position:absolute;top:3px;left:3px;width:9px;height:9px;border-radius:50%;background:var(--marigold);}
+
+  /* tailor marketplace card */
+  .tailor-card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin:12px 16px;overflow:hidden;cursor:pointer;box-shadow:0 2px 10px rgba(27,42,58,.05);}
+  .tailor-card .thumb{height:88px;background:linear-gradient(135deg,var(--ink),var(--ink-soft));display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.35);font-size:34px;}
+  .tailor-card .body{padding:13px 15px;}
+  .tailor-top{display:flex;justify-content:space-between;align-items:flex-start;}
+  .tailor-name{font-weight:700;font-size:15px;color:var(--ink);}
+  .stars{color:var(--marigold);font-size:12px;}
+  .tailor-meta{display:flex;gap:14px;margin-top:8px;font-size:12px;color:var(--gray);flex-wrap:wrap;}
+  .tailor-meta span{display:flex;align-items:center;gap:5px;}
+  .tailor-price{font-weight:800;color:var(--ink);font-size:13.5px;margin-top:8px;}
+
+  /* range slider look (static) */
+  .range-track{height:6px;border-radius:4px;background:var(--border);position:relative;margin:16px 4px 6px;}
+  .range-fill{position:absolute;left:15%;right:35%;top:0;bottom:0;background:var(--marigold);border-radius:4px;}
+  .range-handle{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--marigold);transform:translate(-50%,-50%);}
+
+  /* gallery strip */
+  .gallery-strip{display:flex;gap:10px;overflow-x:auto;padding:0 16px;}
+  .gallery-strip .g-item{flex-shrink:0;width:110px;height:80px;border-radius:12px;background:linear-gradient(135deg,var(--sand),#e7d4a3);display:flex;align-items:center;justify-content:center;color:var(--sand-text);font-size:20px;}
+
+  .spec-tag{display:inline-flex;align-items:center;gap:6px;background:var(--leaf-bg);color:var(--leaf);font-size:12px;font-weight:700;padding:6px 11px;border-radius:20px;margin:4px 6px 4px 0;}
+
+  .price-row{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px dashed var(--border);color:var(--ink);}
+  .price-row:last-child{border-bottom:none;}
+
+  .review-card{border-bottom:1px solid var(--border);padding:14px 0;margin:0 16px;}
+  .review-card:last-child{border-bottom:none;}
+  .review-top{display:flex;align-items:center;gap:10px;}
+  .review-avatar{width:34px;height:34px;border-radius:50%;background:var(--sky-bg);color:var(--sky);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+  .review-name{font-weight:700;font-size:13px;color:var(--ink);}
+  .review-date{font-size:11px;color:var(--gray);}
+  .review-text{font-size:12.5px;color:var(--ink-soft);margin-top:8px;line-height:1.55;}
+
+  /* status timeline */
+  .timeline{margin:16px 16px;}
+  .t-item{display:flex;gap:14px;position:relative;padding-bottom:26px;}
+  .t-item:last-child{padding-bottom:0;}
+  .t-item::before{content:'';position:absolute;left:11px;top:26px;bottom:0;width:2px;background:var(--border);}
+  .t-item:last-child::before{display:none;}
+  .t-dot{width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--border);flex-shrink:0;z-index:1;}
+  .t-item.done .t-dot{background:var(--leaf);border-color:var(--leaf);color:#fff;}
+  .t-item.done::before{background:var(--leaf);}
+  .t-item.current .t-dot{background:var(--marigold);border-color:var(--marigold);color:#fff;}
+  .t-label{font-weight:700;font-size:13.5px;color:var(--ink);}
+  .t-sub{font-size:11.5px;color:var(--gray);margin-top:2px;}
+  .t-item.current .t-label{color:var(--marigold-dark);}
+
+  .list-row{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:14px 16px;margin:12px 16px;border:1px solid var(--border);cursor:pointer;}
+  .list-row .icon-box{width:38px;height:38px;border-radius:10px;background:var(--sky-bg);color:var(--sky);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:700;}
+  .list-row .row-title{font-weight:700;font-size:13.5px;color:var(--ink);}
+  .list-row .row-sub{font-size:11.5px;color:var(--gray);margin-top:2px;}
+  .list-row .chev{margin-left:auto;color:var(--gray);}
+
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 16px 4px;}
+  .stat-card{background:var(--card);border-radius:12px;padding:14px 15px;box-shadow:0 4px 14px rgba(27,42,58,.06);border:1px solid var(--border);}
+  .stat-card.dark{background:var(--ink);border-color:var(--ink);}
+  .stat-label{font-size:11.5px;color:var(--gray);font-weight:600;}
+  .stat-card.dark .stat-label{color:#b9c3cf;}
+  .stat-value{font-size:20px;font-weight:800;color:var(--ink);margin-top:6px;letter-spacing:-.3px;}
+  .stat-card.dark .stat-value{color:#fff;}
+
+  .avatar-lg{width:64px;height:64px;border-radius:14px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;margin:0 auto 10px;}
+
+  .otp-row{display:flex;gap:10px;justify-content:center;margin:20px 16px;}
+  .otp-box{width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;text-align:center;font-size:20px;font-weight:800;color:var(--ink);}
+  .otp-box:focus{border-color:var(--marigold);outline:none;}
+
+  .switch{width:40px;height:23px;border-radius:20px;background:var(--border);position:relative;cursor:pointer;flex-shrink:0;}
+  .switch.on{background:var(--marigold);}
+  .switch .knob{position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:#fff;transition:.15s;}
+  .switch.on .knob{left:19px;}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px 16px;margin:12px 16px;}
+
+  .doc-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:5px 10px;border-radius:20px;}
+  .doc-badge.verified{background:var(--leaf-bg);color:var(--leaf);}
+  .doc-badge.pending{background:var(--sand);color:var(--sand-text);}
+
+  a{color:var(--marigold-dark);}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="devnav">
+    <div onclick="showScreen('customer-home')">User</div>
+    <div onclick="showScreen('tailor-dash')">Tailor</div>
+    <div onclick="showScreen('admin-dashboard')">Admin</div>
+  </div>
+
+  <!-- =========================================================
+       CUSTOMER APP
+  ========================================================== -->
+
+  <!-- CUSTOMER LOGIN -->
+  <div class="screen active" id="customer-login">
+    <header style="text-align:center;padding:44px 20px 30px;">
+      <div class="logo-mark" style="margin:0 auto 12px;"><i class="fas fa-scissors"></i></div>
+      <div class="brand">Tailor Wala</div>
+      <div class="greeting">Find the right tailor near you</div>
+    </header>
+    <div class="card">
+      <div class="form-group"><label class="form-label">Mobile Number</label><input class="form-input" placeholder="+91 98765 43210"></div>
+      <div class="btn btn-primary" onclick="showScreen('customer-otp')">Send OTP</div>
+    </div>
+    <p style="text-align:center;font-size:11.5px;color:var(--gray);margin-top:6px;">By continuing you agree to Tailor Wala's Terms & Privacy Policy</p>
+  </div>
+
+  <div class="screen" id="customer-otp">
+    <header>
+      <div class="back-btn" onclick="showScreen('customer-login')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Verify OTP</div>
+      <div class="page-sub">Sent to +91 98765 43210</div>
+    </header>
+    <div class="otp-row">
+      <input class="otp-box" maxlength="1" value="4"><input class="otp-box" maxlength="1" value="8"><input class="otp-box" maxlength="1" value="2"><input class="otp-box" maxlength="1" value="1">
+    </div>
+    <div style="padding:0 16px;"><div class="btn btn-primary" onclick="showScreen('customer-home')">Verify & Continue</div></div>
+    <p style="text-align:center;font-size:12px;color:var(--marigold-dark);margin-top:14px;font-weight:600;">Resend OTP</p>
+  </div>
+
+  <!-- CUSTOMER HOME -->
+  <div class="screen" id="customer-home">
+    <header>
+      <div class="header-row">
+        <div class="logo-mark"><i class="fas fa-scissors"></i></div>
+        <div class="brand">Tailor Wala</div>
+        <div class="hd-right">
+          <div class="hd-icon-btn" onclick="showScreen('customer-notifications')"><i class="fas fa-bell"></i></div>
+        </div>
+      </div>
+      <div class="loc-bar"><i class="fas fa-location-dot"></i> Banjara Hills, Hyderabad <i class="fas fa-chevron-down" style="margin-left:auto;font-size:10px;"></i></div>
+    </header>
+    <div class="tape-strip"></div>
+
+    <div class="section-title display" style="margin-top:20px;">What work do you need?</div>
+    <div class="service-grid">
+      <div class="service-tile" onclick="selectService('Shirt Stitching','👔')"><span class="emoji">👔</span><div class="lbl">Shirt</div></div>
+      <div class="service-tile" onclick="selectService('Pant Stitching','👖')"><span class="emoji">👖</span><div class="lbl">Pant</div></div>
+      <div class="service-tile" onclick="selectService('Blouse Stitching','👗')"><span class="emoji">👗</span><div class="lbl">Blouse</div></div>
+      <div class="service-tile" onclick="selectService('Alterations','✂️')"><span class="emoji">✂️</span><div class="lbl">Alteration</div></div>
+      <div class="service-tile" onclick="selectService('Dress Stitching','🧵')"><span class="emoji">🧵</span><div class="lbl">Dress</div></div>
+      <div class="service-tile" onclick="showScreen('nearby-tailors')"><span class="emoji">➕</span><div class="lbl">More</div></div>
+    </div>
+
+    <div class="section-title">Recent bookings <span class="view-all" onclick="showScreen('my-bookings')">View all</span></div>
+    <div class="card" onclick="showScreen('booking-detail')" style="cursor:pointer;">
+      <div class="tailor-top">
+        <div><div class="tailor-name">ABC Tailors</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Shirt Stitching × 2</div></div>
+        <span class="pill pill-sky">Accepted</span>
+      </div>
+    </div>
+
+    <div class="section-title display">Best Shirt Tailors Near Me</div>
+    <div class="tailor-card" onclick="showScreen('tailor-profile')">
+      <div class="thumb"><i class="fas fa-shirt"></i></div>
+      <div class="body">
+        <div class="tailor-top"><div class="tailor-name">ABC Tailors</div><div class="stars">★★★★★ 4.8</div></div>
+        <div class="tailor-meta"><span><i class="fas fa-location-dot"></i> 0.7 km</span><span><i class="fas fa-clock"></i> 2 days</span></div>
+        <div class="tailor-price">₹350 onwards</div>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <div class="tab active" onclick="showScreen('customer-home')"><i class="fas fa-house"></i>Home</div>
+      <div class="tab" onclick="showScreen('my-bookings')"><i class="fas fa-calendar-check"></i>Bookings</div>
+      <div class="tab" onclick="showScreen('nearby-tailors')"><i class="fas fa-magnifying-glass"></i>Search</div>
+      <div class="tab" onclick="showScreen('customer-profile')"><i class="fas fa-user"></i>Profile</div>
+    </div>
+  </div>
+
+  <!-- SERVICE TYPE / QUANTITY / MEASUREMENT -->
+  <div class="screen" id="service-detail">
+    <header>
+      <div class="back-btn" onclick="showScreen('customer-home')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title" id="service-detail-title">Shirt Stitching</div>
+      <div class="page-sub">Tell us a little more</div>
+    </header>
+
+    <div class="section-title display">What type?</div>
+    <div class="opt-grid">
+      <div class="opt-tile selected" onclick="pickOpt(this)">Formal Shirt</div>
+      <div class="opt-tile" onclick="pickOpt(this)">Casual Shirt</div>
+      <div class="opt-tile" onclick="pickOpt(this)">Full Sleeve</div>
+      <div class="opt-tile" onclick="pickOpt(this)">Half Sleeve</div>
+    </div>
+
+    <div class="section-title display">How many?</div>
+    <div class="stepper-qty">
+      <div class="qty-btn" onclick="stepQty(-1)">−</div>
+      <div class="qty-val" id="qty-val">1</div>
+      <div class="qty-btn" onclick="stepQty(1)">+</div>
+    </div>
+
+    <div class="section-title display">Do you know your measurements?</div>
+    <div class="radio-line selected" onclick="pickRadio(this)">
+      <div class="radio-dot2"></div>
+      <div><div class="row-title">Yes, I have measurements</div><div class="row-sub">You can share them with the tailor at booking</div></div>
+    </div>
+    <div class="radio-line" onclick="pickRadio(this)">
+      <div class="radio-dot2"></div>
+      <div><div class="row-title">No, I don't know</div><div class="row-sub">No worries — the tailor will take them when you visit the shop</div></div>
+    </div>
+
+    <div style="padding:16px;"><div class="btn btn-primary" onclick="showScreen('nearby-tailors')">Find Tailors</div></div>
+  </div>
+
+  <!-- NEARBY TAILORS -->
+  <div class="screen" id="nearby-tailors">
+    <header>
+      <div class="back-btn" onclick="showScreen('customer-home')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Shirt Stitching — Nearby Tailors</div>
+      <div class="page-sub">12 tailors within 5 km of Banjara Hills</div>
+    </header>
+
+    <div class="chip-row">
+      <div class="chip active" onclick="toggleChip(this)"><i class="fas fa-star"></i>Rating</div>
+      <div class="chip" onclick="toggleChip(this)"><i class="fas fa-location-dot"></i>Distance</div>
+      <div class="chip" onclick="toggleChip(this)"><i class="fas fa-indian-rupee-sign"></i>Price</div>
+      <div class="chip" onclick="toggleChip(this)"><i class="fas fa-bolt"></i>Fastest</div>
+      <div class="chip" onclick="showScreen('filters')"><i class="fas fa-sliders"></i>Filters</div>
+    </div>
+
+    <div class="tailor-card" onclick="showScreen('tailor-profile')">
+      <div class="thumb"><i class="fas fa-shirt"></i></div>
+      <div class="body">
+        <div class="tailor-top"><div class="tailor-name">ABC Tailors</div><div class="stars">★★★★★ 4.7</div></div>
+        <div class="tailor-meta"><span><i class="fas fa-location-dot"></i> 0.8 km</span><span><i class="fas fa-clock"></i> 2–3 days</span></div>
+        <div class="tailor-price">₹350 onwards</div>
+      </div>
+    </div>
+    <div class="tailor-card" onclick="showScreen('tailor-profile')">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--sky),#274a68);"><i class="fas fa-scissors"></i></div>
+      <div class="body">
+        <div class="tailor-top"><div class="tailor-name">Style Point Tailors</div><div class="stars">★★★★☆ 4.5</div></div>
+        <div class="tailor-meta"><span><i class="fas fa-location-dot"></i> 1.2 km</span><span><i class="fas fa-clock"></i> 3 days</span></div>
+        <div class="tailor-price">₹300 onwards</div>
+      </div>
+    </div>
+    <div class="tailor-card" onclick="showScreen('tailor-profile')">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--leaf),#2a6b45);"><i class="fas fa-vest"></i></div>
+      <div class="body">
+        <div class="tailor-top"><div class="tailor-name">Royal Fit Tailors</div><div class="stars">★★★★★ 4.8</div></div>
+        <div class="tailor-meta"><span><i class="fas fa-location-dot"></i> 1.8 km</span><span><i class="fas fa-clock"></i> 2 days</span></div>
+        <div class="tailor-price">₹400 onwards</div>
+      </div>
+    </div>
+    <div class="tailor-card" onclick="showScreen('tailor-profile')">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--red),#8a2c26);"><i class="fas fa-shirt"></i></div>
+      <div class="body">
+        <div class="tailor-top"><div class="tailor-name">Perfect Stitch</div><div class="stars">★★★★☆ 4.3</div></div>
+        <div class="tailor-meta"><span><i class="fas fa-location-dot"></i> 2.4 km</span><span><i class="fas fa-clock"></i> 4 days</span></div>
+        <div class="tailor-price">₹280 onwards</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="screen" id="filters">
+    <header>
+      <div class="back-btn" onclick="showScreen('nearby-tailors')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Filters</div>
+    </header>
+    <div class="section-title display">Price Range</div>
+    <div style="margin:0 20px;">
+      <div class="range-track"><div class="range-fill"></div><div class="range-handle" style="left:15%;"></div><div class="range-handle" style="left:65%;"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray);font-weight:600;"><span>₹200</span><span>₹500</span></div>
+    </div>
+    <div class="section-title display">Distance</div>
+    <div class="radio-line selected" onclick="pickRadio(this)"><div class="radio-dot2"></div><div class="row-title">Within 1 km</div></div>
+    <div class="radio-line" onclick="pickRadio(this)"><div class="radio-dot2"></div><div class="row-title">Within 3 km</div></div>
+    <div class="radio-line" onclick="pickRadio(this)"><div class="radio-dot2"></div><div class="row-title">Within 5 km</div></div>
+    <div class="section-title display">Rating</div>
+    <div class="radio-line" onclick="pickRadio(this)"><div class="radio-dot2"></div><div class="row-title">4★ and above</div></div>
+    <div class="radio-line selected" onclick="pickRadio(this)"><div class="radio-dot2"></div><div class="row-title">Any rating</div></div>
+    <div style="padding:16px;"><div class="btn btn-primary" onclick="showScreen('nearby-tailors')">Apply Filters</div></div>
+  </div>
+
+  <!-- TAILOR PROFILE -->
+  <div class="screen" id="tailor-profile">
+    <header>
+      <div class="back-btn" onclick="showScreen('nearby-tailors')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">ABC Tailors</div>
+      <div class="page-sub"><span class="stars" style="color:var(--marigold);">★★★★★</span> 4.7 (128 reviews) · 0.8 km away</div>
+    </header>
+
+    <div class="gallery-strip" style="margin-top:14px;">
+      <div class="g-item"><i class="fas fa-store"></i></div>
+      <div class="g-item"><i class="fas fa-shirt"></i></div>
+      <div class="g-item"><i class="fas fa-scissors"></i></div>
+      <div class="g-item"><i class="fas fa-thread"></i></div>
+    </div>
+
+    <div class="section-title display">Specializes In</div>
+    <div style="padding:0 16px;">
+      <span class="spec-tag"><i class="fas fa-check"></i>Shirt</span>
+      <span class="spec-tag"><i class="fas fa-check"></i>Pant</span>
+      <span class="spec-tag"><i class="fas fa-check"></i>Alterations</span>
+      <span class="spec-tag"><i class="fas fa-check"></i>Uniforms</span>
+    </div>
+
+    <div class="section-title display">Price</div>
+    <div class="card">
+      <div class="price-row"><span>Shirt</span><span>₹350+</span></div>
+      <div class="price-row"><span>Pant</span><span>₹300+</span></div>
+      <div class="price-row"><span>Alteration</span><span>₹100+</span></div>
+    </div>
+
+    <div class="section-title display">Estimated Time <span style="font-weight:700;color:var(--ink);text-transform:none;letter-spacing:0;font-family:'Inter',sans-serif;">2–3 days</span></div>
+
+    <div class="section-title display">Working Hours</div>
+    <div class="card">
+      <div class="price-row"><span>Mon – Sat</span><span>10:00 AM – 8:30 PM</span></div>
+      <div class="price-row"><span>Sunday</span><span>Closed</span></div>
+    </div>
+
+    <div class="section-title">Reviews <span class="view-all" onclick="showScreen('reviews')">View all 128</span></div>
+    <div class="review-card">
+      <div class="review-top"><div class="review-avatar">R</div><div><div class="review-name">Ravi Kumar</div><div class="review-date">3 days ago</div></div></div>
+      <div class="review-text">Great fit on my formal shirts, and they were ready a day early.</div>
+    </div>
+
+    <div class="list-row" onclick="showScreen('directions')">
+      <div class="icon-box"><i class="fas fa-location-dot"></i></div>
+      <div><div class="row-title">12-4-118, Road No. 3, Banjara Hills</div><div class="row-sub">Get directions · +91 90000 11122</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="showScreen('book-appointment')">Book Appointment</div></div>
+  </div>
+
+  <!-- REVIEWS (full list) -->
+  <div class="screen" id="reviews">
+    <header>
+      <div class="back-btn" onclick="showScreen('tailor-profile')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Reviews</div>
+      <div class="page-sub">ABC Tailors · 4.7 average (128 reviews)</div>
+    </header>
+    <div class="review-card" style="margin-top:16px;">
+      <div class="review-top"><div class="review-avatar">R</div><div><div class="review-name">Ravi Kumar</div><div class="review-date">3 days ago · ★★★★★</div></div></div>
+      <div class="review-text">Great fit on my formal shirts, and they were ready a day early.</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top"><div class="review-avatar" style="background:var(--leaf-bg);color:var(--leaf);">A</div><div><div class="review-name">Anjali Rao</div><div class="review-date">1 week ago · ★★★★★</div></div></div>
+      <div class="review-text">Very polite staff, took time to understand the fit I wanted.</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top"><div class="review-avatar" style="background:var(--sand);color:var(--sand-text);">M</div><div><div class="review-name">Meera Patel</div><div class="review-date">2 weeks ago · ★★★★☆</div></div></div>
+      <div class="review-text">Good work, slightly delayed by a day but quality was worth it.</div>
+    </div>
+  </div>
+
+  <!-- BOOK APPOINTMENT -->
+  <div class="screen" id="book-appointment">
+    <header>
+      <div class="back-btn" onclick="showScreen('tailor-profile')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Book Appointment</div>
+      <div class="page-sub">ABC Tailors</div>
+    </header>
+    <div class="card" style="margin-top:16px;">
+      <div class="form-group"><label class="form-label">Service</label><input class="form-input" value="Shirt Stitching" readonly></div>
+      <div class="form-group"><label class="form-label">Quantity</label>
+        <div class="stepper-qty" style="padding:0;justify-content:flex-start;gap:16px;">
+          <div class="qty-btn" onclick="stepQty2(-1)">−</div>
+          <div class="qty-val" id="qty-val2">2</div>
+          <div class="qty-btn" onclick="stepQty2(1)">+</div>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Preferred Date</label><input type="date" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Preferred Time</label><input type="time" class="form-input" value="11:00"></div>
+      <div class="form-group">
+        <label class="form-label">Measurement</label>
+        <div style="background:#f4efe4;border-radius:10px;padding:11px 13px;font-size:12.5px;color:var(--ink-soft);"><i class="fas fa-circle-info" style="color:var(--marigold-dark);"></i>&nbsp; Will be taken by the tailor when you visit</div>
+      </div>
+      <div class="form-group"><label class="form-label">Notes (optional)</label><textarea class="form-input" rows="3" placeholder="Any preferences or special instructions"></textarea></div>
+    </div>
+    <div style="padding:0 16px;"><div class="btn btn-primary" onclick="showScreen('booking-confirmed')">Confirm Booking</div></div>
+  </div>
+
+  <!-- BOOKING CONFIRMED -->
+  <div class="screen" id="booking-confirmed">
+    <div style="padding:60px 30px 20px;text-align:center;">
+      <div style="width:76px;height:76px;border-radius:50%;background:var(--leaf-bg);color:var(--leaf);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 18px;"><i class="fas fa-check"></i></div>
+      <h2 style="font-size:20px;color:var(--ink);">Booking Confirmed!</h2>
+      <p style="color:var(--gray);font-size:13px;margin-top:8px;">Booking #TW10021 with ABC Tailors</p>
+    </div>
+    <div class="card">
+      <div class="price-row"><span>Service</span><span>Shirt Stitching × 2</span></div>
+      <div class="price-row"><span>Date & Time</span><span>29 Aug, 11:00 AM</span></div>
+      <div class="price-row"><span>Shop</span><span>ABC Tailors</span></div>
+    </div>
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="showScreen('booking-detail')">View Booking</div></div>
+    <div style="padding:12px 16px 0;"><div class="btn btn-outline" onclick="showScreen('directions')">Get Directions</div></div>
+  </div>
+
+  <!-- MY BOOKINGS -->
+  <div class="screen" id="my-bookings">
+    <header>
+      <div class="back-btn" onclick="showScreen('customer-home')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">My Bookings</div>
+    </header>
+    <div class="card" onclick="showScreen('booking-detail')" style="cursor:pointer;margin-top:16px;">
+      <div class="tailor-top">
+        <div><div class="tailor-name">ABC Tailors</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Shirt Stitching × 2 · #TW10021</div></div>
+        <span class="pill pill-sky">Accepted</span>
+      </div>
+    </div>
+    <div class="card" style="cursor:pointer;">
+      <div class="tailor-top">
+        <div><div class="tailor-name">Royal Fit Tailors</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Blouse Stitching × 1 · #TW10009</div></div>
+        <span class="pill pill-leaf">Completed</span>
+      </div>
+    </div>
+    <div class="card" style="cursor:pointer;">
+      <div class="tailor-top">
+        <div><div class="tailor-name">Style Point Tailors</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Alteration · #TW09988</div></div>
+        <span class="pill pill-red">Cancelled</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKING DETAIL (customer) -->
+  <div class="screen" id="booking-detail">
+    <header>
+      <div class="back-btn" onclick="showScreen('my-bookings')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Booking #TW10021</div>
+      <div class="page-sub">ABC Tailors · Shirt Stitching × 2</div>
+    </header>
+    <div class="timeline">
+      <div class="t-item done"><div class="t-dot"><i class="fas fa-check"></i></div><div><div class="t-label">Pending</div><div class="t-sub">Booking placed — 27 Aug, 6:40 PM</div></div></div>
+      <div class="t-item current"><div class="t-dot"><i class="fas fa-check"></i></div><div><div class="t-label">Accepted</div><div class="t-sub">Tailor confirmed your slot — 28 Aug, 9:10 AM</div></div></div>
+      <div class="t-item"><div class="t-dot"></div><div><div class="t-label">Customer Visited</div><div class="t-sub">Pending</div></div></div>
+      <div class="t-item"><div class="t-dot"></div><div><div class="t-label">Measurement Taken</div><div class="t-sub">Pending</div></div></div>
+      <div class="t-item"><div class="t-dot"></div><div><div class="t-label">Stitching</div><div class="t-sub">Pending</div></div></div>
+      <div class="t-item"><div class="t-dot"></div><div><div class="t-label">Ready</div><div class="t-sub">Pending</div></div></div>
+      <div class="t-item"><div class="t-dot"></div><div><div class="t-label">Completed</div><div class="t-sub">Pending</div></div></div>
+    </div>
+    <div class="card">
+      <div class="price-row"><span>Preferred date</span><span>29 Aug, 11:00 AM</span></div>
+      <div class="price-row"><span>Quantity</span><span>2</span></div>
+      <div class="price-row"><span>Est. price</span><span>₹700 onwards</span></div>
+    </div>
+    <div style="padding:0 16px;"><div class="btn btn-outline" onclick="showScreen('directions')"><i class="fas fa-location-dot"></i>&nbsp; Get Directions</div></div>
+    <div style="padding:12px 16px 0;"><div class="btn btn-danger-outline" onclick="alert('Booking cancelled.'); showScreen('my-bookings');">Cancel Booking</div></div>
+  </div>
+
+  <!-- DIRECTIONS -->
+  <div class="screen" id="directions">
+    <header>
+      <div class="back-btn" onclick="showScreen('tailor-profile')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Directions</div>
+      <div class="page-sub">ABC Tailors</div>
+    </header>
+    <div style="margin:16px;height:200px;border-radius:14px;background:linear-gradient(135deg,#dfe7ee,#c9d6e2);display:flex;align-items:center;justify-content:center;color:var(--sky);font-size:34px;">
+      <i class="fas fa-map-location-dot"></i>
+    </div>
+    <div class="card">
+      <div style="font-weight:700;font-size:13.5px;color:var(--ink);">12-4-118, Road No. 3, Banjara Hills, Hyderabad</div>
+      <div style="font-size:12px;color:var(--gray);margin-top:6px;">0.8 km from your location</div>
+    </div>
+    <div class="btn-row" style="padding:0 16px;">
+      <div class="btn btn-primary"><i class="fas fa-diamond-turn-right"></i>&nbsp; Navigate</div>
+      <div class="btn btn-outline"><i class="fas fa-phone"></i>&nbsp; Call</div>
+    </div>
+  </div>
+
+  <!-- CUSTOMER NOTIFICATIONS -->
+  <div class="screen" id="customer-notifications">
+    <header>
+      <div class="back-btn" onclick="showScreen('customer-home')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Notifications</div>
+    </header>
+    <div class="list-row"><div class="icon-box"><i class="fas fa-check"></i></div><div><div class="row-title">ABC Tailors accepted your booking</div><div class="row-sub">#TW10021 · 20 min ago</div></div></div>
+    <div class="list-row"><div class="icon-box"><i class="fas fa-star"></i></div><div><div class="row-title">Rate your recent visit</div><div class="row-sub">Royal Fit Tailors · Yesterday</div></div></div>
+  </div>
+
+  <!-- CUSTOMER PROFILE -->
+  <div class="screen" id="customer-profile">
+    <header>
+      <div class="back-btn" onclick="showScreen('customer-home')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Profile</div>
+    </header>
+    <div class="card" style="margin-top:16px;text-align:center;">
+      <div class="avatar-lg">P</div>
+      <div style="font-weight:700;font-size:15px;">Priya Sharma</div>
+      <div style="color:var(--gray);font-size:12px;">+91 90123 45678</div>
+    </div>
+    <div class="card" style="padding:0;">
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('my-bookings')"><div class="icon-box"><i class="fas fa-calendar-check"></i></div><div class="row-title">My Bookings</div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);"><div class="icon-box"><i class="fas fa-map-marker-alt"></i></div><div class="row-title">Saved Addresses</div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;" onclick="showScreen('customer-login')"><div class="icon-box"><i class="fas fa-arrow-right-from-bracket"></i></div><div class="row-title">Log Out</div></div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       TAILOR DASHBOARD
+  ========================================================== -->
+
+  <div class="screen" id="tailor-login">
+    <header style="text-align:center;padding:44px 20px 30px;">
+      <div class="logo-mark" style="margin:0 auto 12px;"><i class="fas fa-scissors"></i></div>
+      <div class="brand">Tailor Wala</div>
+      <div class="greeting">Partner Dashboard</div>
+    </header>
+    <div class="card">
+      <div class="form-group"><label class="form-label">Mobile Number</label><input class="form-input" placeholder="+91 98765 43210"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" placeholder="••••••••"></div>
+      <div class="btn btn-primary" onclick="showScreen('tailor-dash')">Log In</div>
+    </div>
+    <p style="text-align:center;font-size:12px;margin-top:10px;"><a href="#">New here? Register your shop free</a></p>
+  </div>
+
+  <div class="screen" id="tailor-dash">
+    <header>
+      <div class="header-row">
+        <div class="logo-mark"><i class="fas fa-scissors"></i></div>
+        <div class="brand" style="font-size:16px;">ABC Tailors</div>
+        <div class="hd-right"><div class="hd-icon-btn" onclick="showScreen('tailor-profile-setup')"><i class="fas fa-gear"></i></div></div>
+      </div>
+      <div class="greeting">Partner since Jan 2023 · <span class="doc-badge verified" style="margin-left:4px;"><i class="fas fa-badge-check"></i>Verified</span></div>
+    </header>
+
+    <div class="stat-grid">
+      <div class="stat-card dark"><div class="stat-label">Today's bookings</div><div class="stat-value">6</div></div>
+      <div class="stat-card"><div class="stat-label">New requests</div><div class="stat-value">2</div></div>
+      <div class="stat-card"><div class="stat-label">This month</div><div class="stat-value">38</div></div>
+      <div class="stat-card"><div class="stat-label">Rating</div><div class="stat-value">4.7★</div></div>
+    </div>
+
+    <div class="section-title display">Today's Bookings</div>
+    <div class="list-row" onclick="showScreen('tailor-booking-detail')"><div class="icon-box">10</div><div><div class="row-title">Ravi Kumar</div><div class="row-sub">Shirt × 2 · 10:00 AM</div></div><span class="pill pill-sky">Accepted</span></div>
+    <div class="list-row" onclick="showScreen('tailor-booking-detail')"><div class="icon-box">11</div><div><div class="row-title">Gopi Chand</div><div class="row-sub">Pant × 1 · 11:30 AM</div></div><span class="pill pill-sky">Accepted</span></div>
+    <div class="list-row" onclick="showScreen('tailor-booking-detail')"><div class="icon-box">02</div><div><div class="row-title">Suresh Babu</div><div class="row-sub">Alteration · 2:00 PM</div></div><span class="pill pill-sky">Accepted</span></div>
+
+    <div class="section-title display">New Requests</div>
+    <div class="card">
+      <div class="tailor-top">
+        <div><div class="tailor-name">#TW10021</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Shirt Stitching × 2 · Kavya Reddy</div></div>
+      </div>
+      <div class="btn-row" style="margin-top:12px;">
+        <div class="btn btn-primary btn-sm" onclick="alert('Booking accepted!')">Accept</div>
+        <div class="btn btn-danger-outline btn-sm" onclick="alert('Booking rejected.')">Reject</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tailor-top">
+        <div><div class="tailor-name">#TW10022</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Blouse Stitching × 1 · Sneha Iyer</div></div>
+      </div>
+      <div class="btn-row" style="margin-top:12px;">
+        <div class="btn btn-primary btn-sm" onclick="alert('Booking accepted!')">Accept</div>
+        <div class="btn btn-danger-outline btn-sm" onclick="alert('Booking rejected.')">Reject</div>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <div class="tab active" onclick="showScreen('tailor-dash')"><i class="fas fa-house"></i>Home</div>
+      <div class="tab" onclick="showScreen('tailor-booking-detail')"><i class="fas fa-calendar-check"></i>Bookings</div>
+      <div class="tab" onclick="showScreen('tailor-reviews')"><i class="fas fa-star"></i>Reviews</div>
+      <div class="tab" onclick="showScreen('tailor-profile-setup')"><i class="fas fa-gear"></i>Profile</div>
+    </div>
+  </div>
+
+  <div class="screen" id="tailor-booking-detail">
+    <header>
+      <div class="back-btn" onclick="showScreen('tailor-dash')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Ravi Kumar</div>
+      <div class="page-sub">Shirt Stitching × 2 · #TW10018</div>
+    </header>
+    <div class="card" style="margin-top:16px;">
+      <div class="price-row"><span>Phone</span><span>+91 98765 43210</span></div>
+      <div class="price-row"><span>Preferred time</span><span>29 Aug, 10:00 AM</span></div>
+      <div class="price-row"><span>Notes</span><span>Slim fit, French cuffs</span></div>
+    </div>
+    <div class="section-title display">Update Status</div>
+    <div class="card">
+      <select class="form-input">
+        <option>Pending</option>
+        <option>Accepted</option>
+        <option selected>Customer Visited</option>
+        <option>Measurement Taken</option>
+        <option>Stitching</option>
+        <option>Ready</option>
+        <option>Completed</option>
+      </select>
+      <div class="btn btn-primary" style="margin-top:12px;" onclick="alert('Status updated!')">Save Update</div>
+    </div>
+    <div style="padding:0 16px;"><div class="btn btn-outline"><i class="fas fa-message"></i>&nbsp; Message Customer</div></div>
+  </div>
+
+  <div class="screen" id="tailor-profile-setup">
+    <header>
+      <div class="back-btn" onclick="showScreen('tailor-dash')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Shop Profile</div>
+    </header>
+    <div class="card" style="margin-top:16px;">
+      <div class="form-group"><label class="form-label">Shop Name</label><input class="form-input" value="ABC Tailors"></div>
+      <div class="form-group"><label class="form-label">Owner Name</label><input class="form-input" value="Ashok Reddy"></div>
+      <div class="form-group"><label class="form-label">Address</label><textarea class="form-input" rows="2">12-4-118, Road No. 3, Banjara Hills</textarea></div>
+    </div>
+    <div class="section-title display">Services & Pricing</div>
+    <div class="card">
+      <div class="form-group"><label class="form-label">Shirt Stitching (₹ onwards)</label><input class="form-input" value="350"></div>
+      <div class="form-group"><label class="form-label">Pant Stitching (₹ onwards)</label><input class="form-input" value="300"></div>
+      <div class="form-group"><label class="form-label">Alteration (₹ onwards)</label><input class="form-input" value="100"></div>
+    </div>
+    <div class="section-title display">Working Hours</div>
+    <div class="card">
+      <div class="form-group"><label class="form-label">Mon – Sat</label><input class="form-input" value="10:00 AM – 8:30 PM"></div>
+      <div class="form-group"><label class="form-label">Sunday</label><input class="form-input" value="Closed"></div>
+    </div>
+    <div class="switch-row"><div><div class="row-title">Accepting new bookings</div></div><div class="switch on" onclick="this.classList.toggle('on')"><div class="knob"></div></div></div>
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="alert('Profile saved!')">Save Changes</div></div>
+  </div>
+
+  <div class="screen" id="tailor-reviews">
+    <header>
+      <div class="back-btn" onclick="showScreen('tailor-dash')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Reviews</div>
+      <div class="page-sub">4.7 average · 128 reviews</div>
+    </header>
+    <div class="review-card" style="margin-top:16px;">
+      <div class="review-top"><div class="review-avatar">R</div><div><div class="review-name">Ravi Kumar</div><div class="review-date">3 days ago · ★★★★★</div></div></div>
+      <div class="review-text">Great fit on my formal shirts, and they were ready a day early.</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top"><div class="review-avatar" style="background:var(--leaf-bg);color:var(--leaf);">A</div><div><div class="review-name">Anjali Rao</div><div class="review-date">1 week ago · ★★★★★</div></div></div>
+      <div class="review-text">Very polite staff, took time to understand the fit I wanted.</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       ADMIN PANEL
+  ========================================================== -->
+
+  <div class="screen" id="admin-dashboard">
+    <header>
+      <div class="header-row">
+        <div class="logo-mark"><i class="fas fa-scissors"></i></div>
+        <div class="brand">Tailor Wala <span style="font-weight:500;font-size:11px;color:#b9c3cf;text-transform:none;letter-spacing:0;font-family:'Inter',sans-serif;">Admin</span></div>
+      </div>
+      <div class="greeting">Platform overview — Hyderabad</div>
+    </header>
+    <div class="stat-grid">
+      <div class="stat-card dark"><div class="stat-label">Total customers</div><div class="stat-value">1,240</div></div>
+      <div class="stat-card"><div class="stat-label">Total tailors</div><div class="stat-value">87</div></div>
+      <div class="stat-card"><div class="stat-label">Bookings</div><div class="stat-value">2,450</div></div>
+      <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-value">1,980</div></div>
+    </div>
+    <div class="card">
+      <div class="price-row"><span>Cancelled bookings</span><span style="color:var(--red);font-weight:700;">120</span></div>
+      <div class="price-row"><span>Pending approvals</span><span style="color:var(--sand-text);font-weight:700;">5 tailors</span></div>
+    </div>
+    <div class="section-title display">Manage</div>
+    <div class="card" style="padding:0;">
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('admin-tailors')"><div class="icon-box"><i class="fas fa-user-friends"></i></div><div><div class="row-title">Tailors</div><div class="row-sub">87 total · 5 pending approval</div></div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('admin-customers')"><div class="icon-box"><i class="fas fa-users"></i></div><div><div class="row-title">Customers</div><div class="row-sub">1,240 total</div></div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('admin-services')"><div class="icon-box"><i class="fas fa-list-check"></i></div><div><div class="row-title">Services</div><div class="row-sub">5 categories</div></div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;" onclick="showScreen('admin-locations')"><div class="icon-box"><i class="fas fa-map-location-dot"></i></div><div><div class="row-title">Locations</div><div class="row-sub">1 city · 14 areas</div></div><i class="fas fa-chevron-right chev"></i></div>
+    </div>
+    <div class="nav-tabs">
+      <div class="tab active" onclick="showScreen('admin-dashboard')"><i class="fas fa-house"></i>Home</div>
+      <div class="tab" onclick="showScreen('admin-tailors')"><i class="fas fa-user-friends"></i>Tailors</div>
+      <div class="tab" onclick="showScreen('admin-customers')"><i class="fas fa-users"></i>Customers</div>
+      <div class="tab" onclick="showScreen('admin-services')"><i class="fas fa-list-check"></i>Services</div>
+    </div>
+  </div>
+
+  <div class="screen" id="admin-tailors">
+    <header>
+      <div class="back-btn" onclick="showScreen('admin-dashboard')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Tailors</div>
+    </header>
+    <div class="card" style="margin-top:16px;"><input class="form-input" placeholder="Search tailors"></div>
+    <div class="list-row" onclick="showScreen('admin-tailor-detail')">
+      <div class="icon-box" style="background:var(--sky-bg);">A</div>
+      <div><div class="row-title">ABC Tailors</div><div class="row-sub">Banjara Hills · 4.7★</div></div>
+      <span class="doc-badge verified">Verified</span>
+    </div>
+    <div class="list-row" onclick="showScreen('admin-tailor-detail')">
+      <div class="icon-box" style="background:var(--leaf-bg);color:var(--leaf);">S</div>
+      <div><div class="row-title">Style Point Tailors</div><div class="row-sub">Jubilee Hills · 4.5★</div></div>
+      <span class="doc-badge verified">Verified</span>
+    </div>
+    <div class="list-row" onclick="showScreen('admin-tailor-detail')">
+      <div class="icon-box" style="background:var(--sand);color:var(--sand-text);">N</div>
+      <div><div class="row-title">New Look Tailors</div><div class="row-sub">Kondapur · Just registered</div></div>
+      <span class="doc-badge pending">Pending</span>
+    </div>
+  </div>
+
+  <div class="screen" id="admin-tailor-detail">
+    <header>
+      <div class="back-btn" onclick="showScreen('admin-tailors')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">ABC Tailors</div>
+      <div class="page-sub">Banjara Hills · Registered Jan 2023</div>
+    </header>
+    <div style="padding:14px 16px 0;"><span class="doc-badge verified"><i class="fas fa-badge-check"></i>Documents Verified</span></div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Bookings</div><div class="stat-value">412</div></div>
+      <div class="stat-card"><div class="stat-label">Rating</div><div class="stat-value">4.7★</div></div>
+    </div>
+    <div class="card">
+      <div class="form-group"><label class="form-label">Shirt price (₹ onwards)</label><input class="form-input" value="350"></div>
+      <div class="form-group"><label class="form-label">Pant price (₹ onwards)</label><input class="form-input" value="300"></div>
+      <div class="btn btn-primary" onclick="alert('Prices updated!')">Save Prices</div>
+    </div>
+    <div class="btn-row" style="padding:0 16px;">
+      <div class="btn btn-outline" onclick="alert('Tailor blocked.')"><i class="fas fa-ban"></i>&nbsp; Block Tailor</div>
+      <div class="btn btn-outline" onclick="alert('Tailor approved!')"><i class="fas fa-check"></i>&nbsp; Approve</div>
+    </div>
+  </div>
+
+  <div class="screen" id="admin-customers">
+    <header>
+      <div class="back-btn" onclick="showScreen('admin-dashboard')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Customers</div>
+    </header>
+    <div class="card" style="margin-top:16px;"><input class="form-input" placeholder="Search customers"></div>
+    <div class="list-row"><div class="icon-box" style="background:var(--sky-bg);">P</div><div><div class="row-title">Priya Sharma</div><div class="row-sub">6 bookings · Joined Feb 2024</div></div><i class="fas fa-chevron-right chev"></i></div>
+    <div class="list-row"><div class="icon-box" style="background:var(--leaf-bg);color:var(--leaf);">R</div><div><div class="row-title">Ravi Kumar</div><div class="row-sub">3 bookings · Joined Jun 2024</div></div><i class="fas fa-chevron-right chev"></i></div>
+    <div class="section-title display">Complaints</div>
+    <div class="card">
+      <div class="tailor-top">
+        <div><div class="tailor-name">Booking #TW09988</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Order delayed by 3 days</div></div>
+        <span class="pill pill-red">Open</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen" id="admin-services">
+    <header>
+      <div class="back-btn" onclick="showScreen('admin-dashboard')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Services</div>
+    </header>
+    <div class="list-row"><div class="icon-box">👔</div><div><div class="row-title">Shirt Stitching</div><div class="row-sub">42 tailors offer this</div></div><i class="fas fa-chevron-right chev"></i></div>
+    <div class="list-row"><div class="icon-box">👖</div><div><div class="row-title">Pant Stitching</div><div class="row-sub">38 tailors offer this</div></div><i class="fas fa-chevron-right chev"></i></div>
+    <div class="list-row"><div class="icon-box">👗</div><div><div class="row-title">Blouse Stitching</div><div class="row-sub">29 tailors offer this</div></div><i class="fas fa-chevron-right chev"></i></div>
+    <div class="list-row"><div class="icon-box">✂️</div><div><div class="row-title">Alterations</div><div class="row-sub">51 tailors offer this</div></div><i class="fas fa-chevron-right chev"></i></div>
+    <div class="list-row"><div class="icon-box">🧵</div><div><div class="row-title">Dress Stitching</div><div class="row-sub">22 tailors offer this</div></div><i class="fas fa-chevron-right chev"></i></div>
+    <div style="padding:12px 16px;"><div class="btn btn-outline">+ Add Service Category</div></div>
+  </div>
+
+  <div class="screen" id="admin-locations">
+    <header>
+      <div class="back-btn" onclick="showScreen('admin-dashboard')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Locations</div>
+    </header>
+    <div class="list-row"><div class="icon-box"><i class="fas fa-city"></i></div><div><div class="row-title">Hyderabad</div><div class="row-sub">14 areas active</div></div><span class="pill pill-leaf">Live</span></div>
+    <div class="section-title display">Areas in Hyderabad</div>
+    <div class="card">
+      <div class="price-row"><span>Banjara Hills</span><span>5 km radius</span></div>
+      <div class="price-row"><span>Jubilee Hills</span><span>5 km radius</span></div>
+      <div class="price-row"><span>Kondapur</span><span>4 km radius</span></div>
+    </div>
+    <div style="padding:6px 16px 0;"><div class="btn btn-outline">+ Add City</div></div>
+  </div>
+
+</div>
+
+<script>
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+}
+
+function selectService(name, emoji){
+  document.getElementById('service-detail-title').textContent = name;
+  showScreen('service-detail');
+}
+
+function pickOpt(el){
+  el.parentElement.querySelectorAll('.opt-tile').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function pickRadio(el){
+  el.parentElement.querySelectorAll('.radio-line').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function toggleChip(el){
+  el.parentElement.querySelectorAll('.chip').forEach(c => { if (c !== el && c.textContent.trim() !== 'Filters') c.classList.remove('active'); });
+  el.classList.toggle('active');
+}
+
+let qty = 1;
+function stepQty(d){
+  qty = Math.max(1, qty + d);
+  document.getElementById('qty-val').textContent = qty;
+}
+
+let qty2 = 2;
+function stepQty2(d){
+  qty2 = Math.max(1, qty2 + d);
+  document.getElementById('qty-val2').textContent = qty2;
+}
+</script>
+</body>
+</html>
