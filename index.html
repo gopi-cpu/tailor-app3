@@ -187,6 +187,25 @@
   .doc-badge.verified{background:var(--leaf-bg);color:var(--leaf);}
   .doc-badge.pending{background:var(--sand);color:var(--sand-text);}
 
+  /* measurement capture (used by tailor & admin order-creation flows) */
+  .meas-tabs{display:flex;margin:16px 16px 4px;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:#fff;}
+  .meas-tab{flex:1;text-align:center;padding:11px 6px;font-size:12.5px;font-weight:700;color:var(--gray);cursor:pointer;}
+  .meas-tab.active{background:var(--ink);color:#fff;}
+  .meas-group-label{margin:18px 18px 6px;font-size:12px;font-weight:700;color:var(--marigold-dark);text-transform:uppercase;letter-spacing:.4px;}
+  .meas-panel{display:none;}
+  .meas-panel.active{display:block;}
+  .meas-row{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px 14px;margin:9px 16px;}
+  .meas-row .icon-box{width:38px;height:38px;border-radius:10px;background:var(--sky-bg);color:var(--sky);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .meas-row .meas-label{flex:1;min-width:0;}
+  .meas-row .meas-label .en{font-weight:700;font-size:13px;color:var(--ink);}
+  .meas-row .meas-label .hi{font-size:11px;color:var(--gray);margin-top:1px;}
+  .meas-field{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+  .meas-input{width:58px;padding:8px 6px;border:1.5px solid var(--border);border-radius:8px;text-align:center;font-size:13px;font-weight:700;color:var(--ink);background:#fdfaf6;}
+  .meas-input:focus{border-color:var(--marigold);outline:none;}
+  .meas-unit{font-size:10.5px;color:var(--gray);font-weight:600;}
+  .sticky-bar{position:fixed;bottom:0;width:100%;max-width:420px;background:var(--card);border-top:1px solid var(--border);padding:12px 16px 16px;z-index:150;}
+  .link-row{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--marigold-dark);font-weight:700;font-size:12.5px;padding:12px;cursor:pointer;}
+
   a{color:var(--marigold-dark);}
 </style>
 </head>
@@ -638,10 +657,14 @@
       <div class="stat-card"><div class="stat-label">Rating</div><div class="stat-value">4.7★</div></div>
     </div>
 
+    <div style="padding:0 16px;"><div class="btn btn-primary" onclick="orderCustomerName='Search or select a customer'; orderMeasurementsCount=0; resetOrderForm('tailor'); showScreen('tailor-new-order')">+ Create Order for Customer</div></div>
+
     <div class="section-title display">Today's Bookings</div>
+    <div id="tailor-dash-bookings-list">
     <div class="list-row" onclick="showScreen('tailor-booking-detail')"><div class="icon-box">10</div><div><div class="row-title">Ravi Kumar</div><div class="row-sub">Shirt × 2 · 10:00 AM</div></div><span class="pill pill-sky">Accepted</span></div>
     <div class="list-row" onclick="showScreen('tailor-booking-detail')"><div class="icon-box">11</div><div><div class="row-title">Gopi Chand</div><div class="row-sub">Pant × 1 · 11:30 AM</div></div><span class="pill pill-sky">Accepted</span></div>
     <div class="list-row" onclick="showScreen('tailor-booking-detail')"><div class="icon-box">02</div><div><div class="row-title">Suresh Babu</div><div class="row-sub">Alteration · 2:00 PM</div></div><span class="pill pill-sky">Accepted</span></div>
+    </div>
 
     <div class="section-title display">New Requests</div>
     <div class="card">
@@ -739,6 +762,183 @@
     </div>
   </div>
 
+  <!-- ===================== TAILOR: CREATE ORDER FOR CUSTOMER ===================== -->
+  <div class="screen" id="tailor-new-order">
+    <header>
+      <div class="back-btn" onclick="showScreen('tailor-dash')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Create Order</div>
+      <div class="page-sub">For a walk-in or phone booking</div>
+    </header>
+
+    <div class="list-row" onclick="openSelectCustomer('tailor-new-order')">
+      <div class="icon-box"><i class="fas fa-user"></i></div>
+      <div><div class="row-title">Customer</div><div class="row-sub" id="tno-customer-summary">Search or select a customer</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+
+    <div class="card">
+      <div class="form-group"><label class="form-label">Service</label>
+        <select class="form-input" id="tno-service"><option>Shirt Stitching</option><option>Pant Stitching</option><option>Blouse Stitching</option><option>Alterations</option><option>Dress Stitching</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Quantity</label><input type="number" class="form-input" id="tno-qty" value="1" min="1"></div>
+      <div class="form-group"><label class="form-label">Preferred Date</label><input type="date" class="form-input" id="tno-date"></div>
+      <div class="form-group"><label class="form-label">Preferred Time</label><input type="time" class="form-input" id="tno-time" value="11:00"></div>
+      <div class="form-group"><label class="form-label">Notes (optional)</label><textarea class="form-input" id="tno-notes" rows="3" placeholder="Fit, fabric, special instructions"></textarea></div>
+    </div>
+
+    <div class="list-row" onclick="openMeasurements('tailor-new-order')">
+      <div class="icon-box"><i class="fas fa-ruler-combined"></i></div>
+      <div><div class="row-title">Add Measurements</div><div class="row-sub" id="tno-meas-summary">Not added yet</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="goReview('tailor')">Review Order</div></div>
+  </div>
+
+  <!-- ===================== ADMIN: CREATE ORDER & ASSIGN ===================== -->
+  <div class="screen" id="admin-new-order">
+    <header>
+      <div class="back-btn" onclick="showScreen('admin-dashboard')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Create Order & Assign</div>
+      <div class="page-sub">Book for a customer and hand it to a tailor</div>
+    </header>
+
+    <div class="list-row" onclick="openSelectCustomer('admin-new-order')">
+      <div class="icon-box"><i class="fas fa-user"></i></div>
+      <div><div class="row-title">Customer</div><div class="row-sub" id="ano-customer-summary">Search or select a customer</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+
+    <div class="card">
+      <div class="form-group"><label class="form-label">Service</label>
+        <select class="form-input" id="ano-service"><option>Shirt Stitching</option><option>Pant Stitching</option><option>Blouse Stitching</option><option>Alterations</option><option>Dress Stitching</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Quantity</label><input type="number" class="form-input" id="ano-qty" value="1" min="1"></div>
+      <div class="form-group"><label class="form-label">Preferred Date</label><input type="date" class="form-input" id="ano-date"></div>
+      <div class="form-group"><label class="form-label">Preferred Time</label><input type="time" class="form-input" id="ano-time" value="11:00"></div>
+      <div class="form-group"><label class="form-label">Notes (optional)</label><textarea class="form-input" id="ano-notes" rows="3" placeholder="Fit, fabric, special instructions"></textarea></div>
+    </div>
+
+    <div class="list-row" onclick="openMeasurements('admin-new-order')">
+      <div class="icon-box"><i class="fas fa-ruler-combined"></i></div>
+      <div><div class="row-title">Add Measurements</div><div class="row-sub" id="ano-meas-summary">Not added yet</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+
+    <div class="list-row" onclick="showScreen('assign-tailor-pick')">
+      <div class="icon-box" style="background:var(--sand);color:var(--sand-text);"><i class="fas fa-user-gear"></i></div>
+      <div><div class="row-title">Assign To Tailor</div><div class="row-sub" id="ano-assign-summary">Not assigned yet</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="goReview('admin')">Review Order</div></div>
+  </div>
+
+  <!-- ===================== SELECT CUSTOMER (shared) ===================== -->
+  <div class="screen" id="select-customer">
+    <header>
+      <div class="back-btn" onclick="showScreen(selectReturnTo)"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Select Customer</div>
+    </header>
+    <div class="card" style="margin-top:16px;"><input class="form-input" placeholder="Search by name or phone"></div>
+    <div class="pick-row" onclick="pickCustomer('Ravi Kumar')"><div><div class="row-title">Ravi Kumar</div><div class="row-sub">+91 98765 43210</div></div><div class="check"><i class="fas fa-check"></i></div></div>
+    <div class="pick-row" onclick="pickCustomer('Priya Sharma')"><div><div class="row-title">Priya Sharma</div><div class="row-sub">+91 90123 45678</div></div><div class="check"><i class="fas fa-check"></i></div></div>
+    <div class="pick-row" onclick="pickCustomer('Kavya Reddy')"><div><div class="row-title">Kavya Reddy</div><div class="row-sub">+91 91234 56789</div></div><div class="check"><i class="fas fa-check"></i></div></div>
+    <div style="padding:12px 16px;"><div class="btn btn-outline" onclick="showScreen('add-customer')">+ Add New Customer</div></div>
+  </div>
+
+  <!-- ===================== ADD CUSTOMER (shared) ===================== -->
+  <div class="screen" id="add-customer">
+    <header>
+      <div class="back-btn" onclick="showScreen('select-customer')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Add New Customer</div>
+    </header>
+    <div class="card" style="margin-top:16px;">
+      <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="new-cust-name" placeholder="Full name"></div>
+      <div class="form-group"><label class="form-label">Phone</label><input class="form-input" placeholder="+91"></div>
+      <div class="form-group"><label class="form-label">Address (optional)</label><textarea class="form-input" rows="2" placeholder="Street, area, city"></textarea></div>
+      <div class="btn btn-primary" onclick="saveNewCustomer()">Save Customer</div>
+    </div>
+  </div>
+
+  <!-- ===================== ADD MEASUREMENTS (shared) ===================== -->
+  <div class="screen" id="add-measurements">
+    <header>
+      <div class="back-btn" onclick="showScreen(measureReturnTo)"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Add Measurements</div>
+      <div class="page-sub">Recorded once, reused for this order</div>
+    </header>
+
+    <div class="link-row" onclick="fillDemoMeasurements()"><i class="fas fa-clock-rotate-left"></i> Copy from customer's last order</div>
+
+    <div class="meas-tabs">
+      <div class="meas-tab active" onclick="showMeasPanel('upper', this)">Upper Body</div>
+      <div class="meas-tab" onclick="showMeasPanel('lower', this)">Lower Body</div>
+    </div>
+
+    <div class="meas-panel active" id="meas-upper">
+      <div class="meas-group-label">Upper Body (अपर बॉडी) — Measurements (नाप)</div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-ruler-vertical"></i></div><div class="meas-label"><div class="en">Length</div><div class="hi">लम्बाई</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-arrows-left-right"></i></div><div class="meas-label"><div class="en">Shoulder</div><div class="hi">कंधा</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-ruler"></i></div><div class="meas-label"><div class="en">Sleeves length</div><div class="hi">बाजू की लम्बाई</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-dumbbell"></i></div><div class="meas-label"><div class="en">Bicep</div><div class="hi">बाजू घेरा</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-circle-notch"></i></div><div class="meas-label"><div class="en">Elbow</div><div class="hi">कोहनी घेरा</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-circle"></i></div><div class="meas-label"><div class="en">Wrist</div><div class="hi">कलाई</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-ruler-combined"></i></div><div class="meas-label"><div class="en">Chest</div><div class="hi">सीना</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-user"></i></div><div class="meas-label"><div class="en">Neck</div><div class="hi">गला</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+    </div>
+
+    <div class="meas-panel" id="meas-lower">
+      <div class="meas-group-label">Lower Body (लोअर बॉडी) — Measurements (नाप)</div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-ruler-horizontal"></i></div><div class="meas-label"><div class="en">Waist</div><div class="hi">कमर</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-child"></i></div><div class="meas-label"><div class="en">Hip</div><div class="hi">हिप</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-ruler-combined"></i></div><div class="meas-label"><div class="en">Thigh</div><div class="hi">जांघ</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-ruler-vertical"></i></div><div class="meas-label"><div class="en">Inseam</div><div class="hi">इनसीम</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+      <div class="meas-row"><div class="icon-box"><i class="fas fa-ruler-vertical"></i></div><div class="meas-label"><div class="en">Full Length</div><div class="hi">पूरी लम्बाई</div></div><div class="meas-field"><input class="meas-input" type="number" placeholder="0"><span class="meas-unit">in</span></div></div>
+    </div>
+
+    <div style="height:90px;"></div>
+    <div class="sticky-bar"><div class="btn btn-primary" onclick="saveMeasurementsShared()">Save Measurements</div></div>
+  </div>
+
+  <!-- ===================== ASSIGN TAILOR (admin) ===================== -->
+  <div class="screen" id="assign-tailor-pick">
+    <header>
+      <div class="back-btn" onclick="showScreen('admin-new-order')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Assign To Tailor</div>
+      <div class="page-sub">Pick who should handle this order</div>
+    </header>
+    <div class="card" style="margin-top:16px;"><input class="form-input" placeholder="Search tailors"></div>
+    <div id="assign-tailor-pick-list">
+      <div class="pick-row selected" onclick="pickTailorForOrder('ABC Tailors', this)"><div><div class="row-title">ABC Tailors</div><div class="row-sub">Banjara Hills · 4.7★ · 6 active orders</div></div><div class="check"><i class="fas fa-check"></i></div></div>
+      <div class="pick-row" onclick="pickTailorForOrder('Style Point Tailors', this)"><div><div class="row-title">Style Point Tailors</div><div class="row-sub">Jubilee Hills · 4.5★ · 4 active orders</div></div><div class="check"><i class="fas fa-check"></i></div></div>
+      <div class="pick-row" onclick="pickTailorForOrder('Royal Fit Tailors', this)"><div><div class="row-title">Royal Fit Tailors</div><div class="row-sub">Kondapur · 4.8★ · 3 active orders</div></div><div class="check"><i class="fas fa-check"></i></div></div>
+    </div>
+    <div style="padding:16px;"><div class="btn btn-primary" onclick="confirmTailorPick()">Confirm Assignment</div></div>
+  </div>
+
+  <!-- ===================== ORDER REVIEW (shared) ===================== -->
+  <div class="screen" id="order-review">
+    <header>
+      <div class="back-btn" onclick="showScreen(orderActor==='admin' ? 'admin-new-order' : 'tailor-new-order')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Review Order</div>
+    </header>
+    <div class="card" style="margin-top:16px;">
+      <div class="price-row"><span>Customer</span><span id="rev-customer">—</span></div>
+      <div class="price-row"><span>Service</span><span id="rev-service">—</span></div>
+      <div class="price-row"><span>Date & Time</span><span id="rev-datetime">—</span></div>
+    </div>
+    <div class="list-row">
+      <div class="icon-box"><i class="fas fa-ruler-combined"></i></div>
+      <div><div class="row-title">Measurements</div><div class="row-sub" id="rev-measurements">Not added</div></div>
+    </div>
+    <div class="list-row" id="rev-assign-row" style="display:none;">
+      <div class="icon-box" style="background:var(--sand);color:var(--sand-text);"><i class="fas fa-user-gear"></i></div>
+      <div><div class="row-title">Assigned To</div><div class="row-sub" id="rev-assign-summary">Not assigned yet</div></div>
+    </div>
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="confirmCreateOrder()">Confirm & Create Order</div></div>
+  </div>
+
   <!-- =========================================================
        ADMIN PANEL
   ========================================================== -->
@@ -763,6 +963,7 @@
     </div>
     <div class="section-title display">Manage</div>
     <div class="card" style="padding:0;">
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="orderCustomerName='Search or select a customer'; orderMeasurementsCount=0; orderAssignedTailor=null; resetOrderForm('admin'); showScreen('admin-new-order')"><div class="icon-box" style="background:var(--sand);color:var(--sand-text);"><i class="fas fa-plus"></i></div><div><div class="row-title">Create Order & Assign</div><div class="row-sub">Book on behalf of a customer</div></div><i class="fas fa-chevron-right chev"></i></div>
       <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('admin-tailors')"><div class="icon-box"><i class="fas fa-user-friends"></i></div><div><div class="row-title">Tailors</div><div class="row-sub">87 total · 5 pending approval</div></div><i class="fas fa-chevron-right chev"></i></div>
       <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('admin-customers')"><div class="icon-box"><i class="fas fa-users"></i></div><div><div class="row-title">Customers</div><div class="row-sub">1,240 total</div></div><i class="fas fa-chevron-right chev"></i></div>
       <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('admin-services')"><div class="icon-box"><i class="fas fa-list-check"></i></div><div><div class="row-title">Services</div><div class="row-sub">5 categories</div></div><i class="fas fa-chevron-right chev"></i></div>
@@ -905,6 +1106,141 @@ let qty2 = 2;
 function stepQty2(d){
   qty2 = Math.max(1, qty2 + d);
   document.getElementById('qty-val2').textContent = qty2;
+}
+
+/* ---------- shared order-creation flow: tailor creates for a customer, admin creates & assigns ---------- */
+let orderActor = 'tailor';           // 'tailor' or 'admin'
+let orderCustomerName = 'Search or select a customer';
+let orderMeasurementsCount = 0;
+let orderAssignedTailor = null;
+let selectReturnTo = 'tailor-new-order';
+let measureReturnTo = 'tailor-new-order';
+
+function resetOrderForm(actor){
+  const prefix = actor === 'admin' ? 'ano' : 'tno';
+  const custEl = document.getElementById(prefix + '-customer-summary');
+  const measEl = document.getElementById(prefix + '-meas-summary');
+  if (custEl) custEl.textContent = 'Search or select a customer';
+  if (measEl) measEl.textContent = 'Not added yet';
+  const assignEl = document.getElementById('ano-assign-summary');
+  if (actor === 'admin' && assignEl) assignEl.textContent = 'Not assigned yet';
+}
+
+function openSelectCustomer(returnTo){
+  selectReturnTo = returnTo;
+  showScreen('select-customer');
+}
+
+function pickCustomer(name){
+  orderCustomerName = name;
+  updateCustomerSummary();
+  showScreen(selectReturnTo);
+}
+
+function saveNewCustomer(){
+  const nameInput = document.getElementById('new-cust-name');
+  orderCustomerName = (nameInput && nameInput.value.trim()) ? nameInput.value.trim() : 'New Customer';
+  updateCustomerSummary();
+  showScreen(selectReturnTo);
+}
+
+function updateCustomerSummary(){
+  const tnoEl = document.getElementById('tno-customer-summary');
+  const anoEl = document.getElementById('ano-customer-summary');
+  if (tnoEl) tnoEl.textContent = orderCustomerName;
+  if (anoEl) anoEl.textContent = orderCustomerName;
+}
+
+function openMeasurements(returnTo){
+  measureReturnTo = returnTo;
+  showScreen('add-measurements');
+}
+
+function showMeasPanel(which, el){
+  document.querySelectorAll('.meas-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.meas-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('meas-' + which).classList.add('active');
+}
+
+function fillDemoMeasurements(){
+  document.querySelectorAll('#add-measurements .meas-input').forEach(inp => {
+    if(!inp.value) inp.value = (Math.random()*10 + 15).toFixed(1);
+  });
+}
+
+function saveMeasurementsShared(){
+  const filled = Array.from(document.querySelectorAll('#add-measurements .meas-input')).filter(i => i.value).length;
+  orderMeasurementsCount = filled;
+  const tnoEl = document.getElementById('tno-meas-summary');
+  const anoEl = document.getElementById('ano-meas-summary');
+  const summary = filled + ' fields recorded';
+  if (tnoEl) tnoEl.textContent = summary;
+  if (anoEl) anoEl.textContent = summary;
+  showScreen(measureReturnTo);
+}
+
+function pickTailorForOrder(name, el){
+  document.querySelectorAll('#assign-tailor-pick-list .pick-row').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+  orderAssignedTailor = name;
+}
+
+function confirmTailorPick(){
+  const el = document.getElementById('ano-assign-summary');
+  if (el) el.textContent = orderAssignedTailor;
+  showScreen('admin-new-order');
+}
+
+function goReview(actor){
+  orderActor = actor;
+  const prefix = actor === 'admin' ? 'ano' : 'tno';
+  const service = document.getElementById(prefix + '-service').value;
+  const qty = document.getElementById(prefix + '-qty').value || '1';
+  const date = document.getElementById(prefix + '-date').value || '29 Aug 2026';
+  const time = document.getElementById(prefix + '-time').value || '11:00';
+
+  document.getElementById('rev-customer').textContent = orderCustomerName;
+  document.getElementById('rev-service').textContent = service + ' × ' + qty;
+  document.getElementById('rev-datetime').textContent = date + ' · ' + time;
+  document.getElementById('rev-measurements').textContent = orderMeasurementsCount > 0 ? (orderMeasurementsCount + ' fields recorded') : 'Not added';
+
+  const assignRow = document.getElementById('rev-assign-row');
+  if (actor === 'admin'){
+    assignRow.style.display = 'flex';
+    document.getElementById('rev-assign-summary').textContent = orderAssignedTailor || 'Not assigned yet';
+  } else {
+    assignRow.style.display = 'none';
+  }
+  showScreen('order-review');
+}
+
+function confirmCreateOrder(){
+  const customer = document.getElementById('rev-customer').textContent;
+  const serviceQty = document.getElementById('rev-service').textContent;
+  const datetime = document.getElementById('rev-datetime').textContent;
+  const isAdmin = orderActor === 'admin';
+  const assignedTo = isAdmin ? (orderAssignedTailor || 'ABC Tailors') : 'ABC Tailors';
+
+  const card = document.createElement('div');
+  card.className = 'list-row';
+  card.onclick = function(){ showScreen('tailor-booking-detail'); };
+  card.innerHTML =
+    '<div class="icon-box"><i class="fas fa-user"></i></div>' +
+    '<div><div class="row-title">' + customer + '</div>' +
+    '<div class="row-sub">' + serviceQty + ' · ' + datetime + (isAdmin ? ' · <span style="color:var(--sand-text);font-weight:700;">Assigned by Admin</span>' : '') + '</div></div>' +
+    '<span class="pill pill-sky">Accepted</span>';
+
+  const container = document.getElementById('tailor-dash-bookings-list');
+  if (container) container.prepend(card);
+
+  alert(isAdmin ? ('Order created and assigned to ' + assignedTo + '. It now appears in their dashboard.') : 'Order created! It has been added to today\'s bookings.');
+
+  orderCustomerName = 'Search or select a customer';
+  orderMeasurementsCount = 0;
+  orderAssignedTailor = null;
+
+  showScreen(isAdmin ? 'admin-dashboard' : 'tailor-dash');
 }
 </script>
 </body>
