@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tailor Wala — V1</title>
+<title>Tailor Wala — V2</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -41,7 +41,8 @@
   header{background:var(--ink);color:#fff;padding:20px 20px 24px;position:relative;}
   .header-row{display:flex;align-items:center;gap:10px;}
   .header-row .hd-right{margin-left:auto;display:flex;gap:8px;}
-  .hd-icon-btn{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;}
+  .hd-icon-btn{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;position:relative;}
+  .hd-icon-btn .dot{position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;background:var(--marigold);border:2px solid var(--ink);}
   .logo-mark{width:36px;height:36px;border-radius:9px;background:var(--marigold);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--ink);font-size:16px;}
   .brand{font-family:'Oswald',sans-serif;font-weight:700;font-size:19px;letter-spacing:1px;text-transform:uppercase;}
   .greeting{font-size:13px;color:#b9c3cf;margin-top:8px;font-weight:500;}
@@ -62,6 +63,7 @@
   .pill-sky{background:var(--sky-bg);color:var(--sky);}
   .pill-leaf{background:var(--leaf-bg);color:var(--leaf);}
   .pill-red{background:var(--red-bg);color:var(--red);}
+  .pill-marigold{background:#fdf2e3;color:var(--marigold-dark);}
 
   .btn{display:block;width:100%;text-align:center;padding:15px;border-radius:12px;font-weight:700;font-size:14.5px;cursor:pointer;border:none;letter-spacing:.1px;}
   .btn-primary{background:var(--marigold);color:#fff;}
@@ -82,6 +84,7 @@
   .form-label{display:block;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--ink);}
   .form-input{width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff;color:var(--ink);}
   .form-input:focus{border-color:var(--marigold);outline:none;}
+  .field-hint{font-size:11px;color:var(--gray);margin-top:5px;}
 
   /* home service tiles */
   .service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 16px;}
@@ -134,6 +137,7 @@
 
   .price-row{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px dashed var(--border);color:var(--ink);}
   .price-row:last-child{border-bottom:none;}
+  .price-row.total{border-bottom:none;border-top:1.5px solid var(--ink);margin-top:4px;padding-top:12px;font-weight:800;font-size:14.5px;}
 
   .review-card{border-bottom:1px solid var(--border);padding:14px 0;margin:0 16px;}
   .review-card:last-child{border-bottom:none;}
@@ -163,6 +167,11 @@
   .list-row .row-sub{font-size:11.5px;color:var(--gray);margin-top:2px;}
   .list-row .chev{margin-left:auto;color:var(--gray);}
 
+  .pick-row{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:14px 16px;margin:10px 16px;border:1.5px solid var(--border);cursor:pointer;}
+  .pick-row.selected{border-color:var(--marigold);background:#fdf2e3;}
+  .pick-row .check{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;color:transparent;font-size:11px;flex-shrink:0;}
+  .pick-row.selected .check{background:var(--marigold);border-color:var(--marigold);color:#fff;}
+
   .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 16px 4px;}
   .stat-card{background:var(--card);border-radius:12px;padding:14px 15px;box-shadow:0 4px 14px rgba(27,42,58,.06);border:1px solid var(--border);}
   .stat-card.dark{background:var(--ink);border-color:var(--ink);}
@@ -186,8 +195,9 @@
   .doc-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:5px 10px;border-radius:20px;}
   .doc-badge.verified{background:var(--leaf-bg);color:var(--leaf);}
   .doc-badge.pending{background:var(--sand);color:var(--sand-text);}
+  .doc-badge.blocked{background:var(--red-bg);color:var(--red);}
 
-  /* measurement capture (used by tailor & admin order-creation flows) */
+  /* measurement capture */
   .meas-tabs{display:flex;margin:16px 16px 4px;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:#fff;}
   .meas-tab{flex:1;text-align:center;padding:11px 6px;font-size:12.5px;font-weight:700;color:var(--gray);cursor:pointer;}
   .meas-tab.active{background:var(--ink);color:#fff;}
@@ -206,7 +216,65 @@
   .sticky-bar{position:fixed;bottom:0;width:100%;max-width:420px;background:var(--card);border-top:1px solid var(--border);padding:12px 16px 16px;z-index:150;}
   .link-row{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--marigold-dark);font-weight:700;font-size:12.5px;padding:12px;cursor:pointer;}
 
+  /* upload tiles (photos / documents) */
+  .upload-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 16px;}
+  .upload-tile{aspect-ratio:1;border-radius:12px;border:1.5px dashed var(--border);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--gray);font-size:11px;font-weight:600;cursor:pointer;text-align:center;}
+  .upload-tile i{font-size:18px;}
+  .upload-tile.filled{border-style:solid;border-color:var(--marigold);background:#fdf2e3;color:var(--marigold-dark);}
+  .upload-tile.filled i{color:var(--marigold-dark);}
+  .doc-row{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin:10px 16px;}
+  .doc-row .icon-box{width:40px;height:40px;border-radius:10px;background:var(--sky-bg);color:var(--sky);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .doc-row.filled .icon-box{background:var(--leaf-bg);color:var(--leaf);}
+  .doc-row .upload-btn{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--marigold-dark);border:1.5px solid var(--marigold);border-radius:8px;padding:7px 12px;cursor:pointer;background:#fff;flex-shrink:0;}
+  .doc-row.filled .upload-btn{color:var(--leaf);border-color:var(--leaf);}
+
+  /* star rating picker */
+  .star-picker{display:flex;justify-content:center;gap:8px;margin:22px 16px;}
+  .star-picker i{font-size:34px;color:var(--border);cursor:pointer;}
+  .star-picker i.on{color:var(--marigold);}
+
+  /* payment method */
+  .pay-row{display:flex;align-items:center;gap:14px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:14px 15px;margin:10px 16px;cursor:pointer;}
+  .pay-row.selected{border-color:var(--marigold);background:#fdf2e3;}
+  .pay-row .icon-box{width:38px;height:38px;border-radius:10px;background:var(--sky-bg);color:var(--sky);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+
+  /* chat */
+  .chat-body{padding:16px;min-height:340px;}
+  .msg{max-width:78%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.45;margin-bottom:10px;}
+  .msg.in{background:#fff;border:1px solid var(--border);color:var(--ink);border-bottom-left-radius:4px;}
+  .msg.out{background:var(--marigold);color:#fff;margin-left:auto;border-bottom-right-radius:4px;}
+  .msg-time{font-size:10px;color:var(--gray);margin-top:4px;}
+  .chat-input-bar{position:fixed;bottom:0;width:100%;max-width:420px;background:var(--card);border-top:1px solid var(--border);padding:10px 12px 14px;display:flex;gap:8px;z-index:150;}
+  .chat-input-bar input{flex:1;border:1.5px solid var(--border);border-radius:20px;padding:11px 15px;font-size:13px;}
+  .chat-send{width:42px;height:42px;border-radius:50%;background:var(--marigold);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;border:none;font-size:14px;}
+
+  /* invoice */
+  .invoice-head{text-align:center;padding:26px 20px 6px;}
+  .invoice-num{font-size:11px;color:var(--gray);letter-spacing:.5px;margin-top:4px;}
+
+  /* banners */
+  .banner{margin:14px 16px 0;border-radius:12px;padding:12px 14px;font-size:12.5px;font-weight:600;display:flex;gap:9px;align-items:flex-start;}
+  .banner-warn{background:var(--sand);color:var(--sand-text);}
+  .banner-info{background:var(--sky-bg);color:var(--sky);}
+  .banner-danger{background:var(--red-bg);color:var(--red);}
+  .banner i{margin-top:1px;}
+
   a{color:var(--marigold-dark);}
+
+  /* whatsapp toast */
+  #wa-toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#25D366;color:#fff;padding:11px 18px;border-radius:22px;font-size:12.5px;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.25);z-index:999;display:flex;align-items:center;gap:8px;max-width:340px;text-align:left;opacity:0;pointer-events:none;transition:opacity .3s ease, transform .3s ease;}
+  #wa-toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
+  #wa-toast i{font-size:16px;flex-shrink:0;}
+
+  /* custom design tile accent */
+  .service-tile.custom-tile{border-color:var(--marigold);background:#fdf2e3;}
+  .service-tile.custom-tile .lbl{color:var(--marigold-dark);}
+
+  /* quote input row inside a request card */
+  .quote-row{display:flex;gap:8px;margin-top:10px;}
+  .quote-row input{flex:1;padding:11px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;color:var(--ink);}
+  .req-photo-strip{display:flex;gap:8px;margin-top:10px;overflow-x:auto;}
+  .req-photo-strip .rp{flex-shrink:0;width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--sand),#e7d4a3);display:flex;align-items:center;justify-content:center;color:var(--sand-text);font-size:16px;}
 </style>
 </head>
 <body>
@@ -222,7 +290,6 @@
        CUSTOMER APP
   ========================================================== -->
 
-  <!-- CUSTOMER LOGIN -->
   <div class="screen active" id="customer-login">
     <header style="text-align:center;padding:44px 20px 30px;">
       <div class="logo-mark" style="margin:0 auto 12px;"><i class="fas fa-scissors"></i></div>
@@ -256,7 +323,7 @@
         <div class="logo-mark"><i class="fas fa-scissors"></i></div>
         <div class="brand">Tailor Wala</div>
         <div class="hd-right">
-          <div class="hd-icon-btn" onclick="showScreen('customer-notifications')"><i class="fas fa-bell"></i></div>
+          <div class="hd-icon-btn" onclick="renderNotifications(); showScreen('customer-notifications')" id="cust-bell-btn"><i class="fas fa-bell"></i></div>
         </div>
       </div>
       <div class="loc-bar"><i class="fas fa-location-dot"></i> Banjara Hills, Hyderabad <i class="fas fa-chevron-down" style="margin-left:auto;font-size:10px;"></i></div>
@@ -264,12 +331,10 @@
     <div class="tape-strip"></div>
 
     <div class="section-title display" style="margin-top:20px;">What work do you need?</div>
-    <div class="service-grid" id="customer-service-grid">
-      <!-- rendered dynamically from the admin service catalog -->
-    </div>
+    <div class="service-grid" id="customer-service-grid"></div>
 
     <div class="section-title">Recent bookings <span class="view-all" onclick="showScreen('my-bookings')">View all</span></div>
-    <div class="card" onclick="showScreen('booking-detail')" style="cursor:pointer;">
+    <div class="card" onclick="openBookingDetail('TW10021')" style="cursor:pointer;">
       <div class="tailor-top">
         <div><div class="tailor-name">ABC Tailors</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Shirt Stitching × 2</div></div>
         <span class="pill pill-sky">Accepted</span>
@@ -288,8 +353,7 @@
 
     <div class="nav-tabs">
       <div class="tab active" onclick="showScreen('customer-home')"><i class="fas fa-house"></i>Home</div>
-      <div class="tab" onclick="showScreen('my-bookings')"><i class="fas fa-calendar-check"></i>Bookings</div>
-      <div class="tab" onclick="showScreen('nearby-tailors')"><i class="fas fa-magnifying-glass"></i>Search</div>
+      <div class="tab" onclick="goSearch()"><i class="fas fa-magnifying-glass"></i>Search</div>
       <div class="tab" onclick="showScreen('customer-profile')"><i class="fas fa-user"></i>Profile</div>
     </div>
   </div>
@@ -303,12 +367,7 @@
     </header>
 
     <div class="section-title display">What type?</div>
-    <div class="opt-grid">
-      <div class="opt-tile selected" onclick="pickOpt(this)">Formal Shirt</div>
-      <div class="opt-tile" onclick="pickOpt(this)">Casual Shirt</div>
-      <div class="opt-tile" onclick="pickOpt(this)">Full Sleeve</div>
-      <div class="opt-tile" onclick="pickOpt(this)">Half Sleeve</div>
-    </div>
+    <div class="opt-grid" id="service-type-grid"></div>
 
     <div class="section-title display">How many?</div>
     <div class="stepper-qty">
@@ -317,17 +376,46 @@
       <div class="qty-btn" onclick="stepQty(1)">+</div>
     </div>
 
-    <div class="section-title display">Do you know your measurements?</div>
-    <div class="radio-line selected" onclick="pickRadio(this)">
-      <div class="radio-dot2"></div>
-      <div><div class="row-title">Yes, I have measurements</div><div class="row-sub">You can share them with the tailor at booking</div></div>
+    <div class="section-title display">Reference photo <span style="font-weight:500;color:var(--gray);text-transform:none;letter-spacing:0;font-family:'Inter',sans-serif;font-size:11.5px;">optional</span></div>
+    <div class="list-row" onclick="openReferencePhoto('service-detail')">
+      <div class="icon-box"><i class="fas fa-camera"></i></div>
+      <div><div class="row-title">Add design or fabric photo</div><div class="row-sub" id="sd-photo-summary">Helps the tailor get the fit right</div></div>
+      <i class="fas fa-chevron-right chev"></i>
     </div>
-    <div class="radio-line" onclick="pickRadio(this)">
+
+    <div class="section-title display">Do you know your measurements?</div>
+    <div class="radio-line selected" onclick="pickRadio(this); knowsMeasurements=true;">
       <div class="radio-dot2"></div>
-      <div><div class="row-title">No, I don't know</div><div class="row-sub">No worries — the tailor will take them when you visit the shop</div></div>
+      <div><div class="row-title">Yes, add them now</div><div class="row-sub">Pick a profile and enter measurements</div></div>
+    </div>
+    <div class="radio-line" onclick="pickRadio(this); knowsMeasurements=false;">
+      <div class="radio-dot2"></div>
+      <div><div class="row-title">No, I don't know</div><div class="row-sub">No worries — the tailor will take them when you visit</div></div>
     </div>
 
     <div style="padding:16px;"><div class="btn btn-primary" onclick="goFindTailors()">Find Tailors</div></div>
+  </div>
+
+  <!-- MEASUREMENT PROFILE PICK (customer) -->
+  <div class="screen" id="measurement-profile-pick">
+    <header>
+      <div class="back-btn" onclick="showScreen(profileReturnTo)"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Whose measurements?</div>
+      <div class="page-sub">Save profiles for family members you book for</div>
+    </header>
+    <div id="profile-pick-list"></div>
+    <div style="padding:12px 16px;"><div class="btn btn-outline" onclick="openNewProfile()">+ Add New Profile</div></div>
+  </div>
+
+  <div class="screen" id="new-profile">
+    <header>
+      <div class="back-btn" onclick="showScreen('measurement-profile-pick')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">New Measurement Profile</div>
+    </header>
+    <div class="card" style="margin-top:16px;">
+      <div class="form-group"><label class="form-label">Profile Name</label><input class="form-input" id="np-name" placeholder="e.g. Spouse, Arjun (Son)"></div>
+      <div class="btn btn-primary" onclick="saveNewProfile()">Save & Continue</div>
+    </div>
   </div>
 
   <!-- NEARBY TAILORS -->
@@ -426,14 +514,16 @@
       <span class="spec-tag"><i class="fas fa-check"></i>Uniforms</span>
     </div>
 
-    <div class="section-title display">Price</div>
-    <div class="card" id="tp-price-table">
-      <div class="price-row"><span>Shirt</span><span>₹350+</span></div>
-      <div class="price-row"><span>Pant</span><span>₹300+</span></div>
-      <div class="price-row"><span>Alteration</span><span>₹100+</span></div>
-    </div>
+    <div id="tp-catalog-pricing">
+      <div class="section-title display">Price</div>
+      <div class="card" id="tp-price-table">
+        <div class="price-row"><span>Shirt</span><span>₹350+</span></div>
+        <div class="price-row"><span>Pant</span><span>₹300+</span></div>
+        <div class="price-row"><span>Alteration</span><span>₹100+</span></div>
+      </div>
 
-    <div class="section-title display">Estimated Time <span style="font-weight:700;color:var(--ink);text-transform:none;letter-spacing:0;font-family:'Inter',sans-serif;">2–3 days</span></div>
+      <div class="section-title display">Estimated Time <span style="font-weight:700;color:var(--ink);text-transform:none;letter-spacing:0;font-family:'Inter',sans-serif;">2–3 days</span></div>
+    </div>
 
     <div class="section-title display">Working Hours</div>
     <div class="card">
@@ -441,19 +531,21 @@
       <div class="price-row"><span>Sunday</span><span>Closed</span></div>
     </div>
 
-    <div class="section-title">Reviews <span class="view-all" onclick="showScreen('reviews')">View all 128</span></div>
-    <div class="review-card">
-      <div class="review-top"><div class="review-avatar">R</div><div><div class="review-name">Ravi Kumar</div><div class="review-date">3 days ago</div></div></div>
-      <div class="review-text">Great fit on my formal shirts, and they were ready a day early.</div>
-    </div>
+    <div class="section-title">Reviews <span class="view-all" onclick="showScreen('reviews')">View all <span id="tp-review-count">128</span></span></div>
+    <div id="tp-review-preview"></div>
 
     <div class="list-row" onclick="showScreen('directions')">
       <div class="icon-box"><i class="fas fa-location-dot"></i></div>
-      <div><div class="row-title">12-4-118, Road No. 3, Banjara Hills</div><div class="row-sub">Get directions · +91 90000 11122</div></div>
+      <div><div class="row-title" id="tp-address-line">12-4-118, Road No. 3, Banjara Hills</div><div class="row-sub">Get directions</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+    <div class="list-row" onclick="callShop(selectedTailorName)">
+      <div class="icon-box"><i class="fas fa-phone"></i></div>
+      <div><div class="row-title">Call this shop</div><div class="row-sub" id="tp-phone-line">+91 90000 11122</div></div>
       <i class="fas fa-chevron-right chev"></i>
     </div>
 
-    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="openBookAppointment()">Book Appointment</div></div>
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" id="tp-book-btn" onclick="handleBookClick()">Book Appointment</div></div>
   </div>
 
   <!-- REVIEWS (full list) -->
@@ -461,20 +553,9 @@
     <header>
       <div class="back-btn" onclick="showScreen('tailor-profile')"><i class="fas fa-arrow-left"></i></div>
       <div class="page-title">Reviews</div>
-      <div class="page-sub">ABC Tailors · 4.7 average (128 reviews)</div>
+      <div class="page-sub" id="reviews-sub">ABC Tailors · 4.7 average (128 reviews)</div>
     </header>
-    <div class="review-card" style="margin-top:16px;">
-      <div class="review-top"><div class="review-avatar">R</div><div><div class="review-name">Ravi Kumar</div><div class="review-date">3 days ago · ★★★★★</div></div></div>
-      <div class="review-text">Great fit on my formal shirts, and they were ready a day early.</div>
-    </div>
-    <div class="review-card">
-      <div class="review-top"><div class="review-avatar" style="background:var(--leaf-bg);color:var(--leaf);">A</div><div><div class="review-name">Anjali Rao</div><div class="review-date">1 week ago · ★★★★★</div></div></div>
-      <div class="review-text">Very polite staff, took time to understand the fit I wanted.</div>
-    </div>
-    <div class="review-card">
-      <div class="review-top"><div class="review-avatar" style="background:var(--sand);color:var(--sand-text);">M</div><div><div class="review-name">Meera Patel</div><div class="review-date">2 weeks ago · ★★★★☆</div></div></div>
-      <div class="review-text">Good work, slightly delayed by a day but quality was worth it.</div>
-    </div>
+    <div id="reviews-full-list"></div>
   </div>
 
   <!-- BOOK APPOINTMENT -->
@@ -497,83 +578,113 @@
           <div class="qty-btn" onclick="stepQty2(1)">+</div>
         </div>
       </div>
-      <div class="form-group"><label class="form-label">Preferred Date</label><input type="date" class="form-input" id="ba-date"></div>
-      <div class="form-group"><label class="form-label">Preferred Time</label><input type="time" class="form-input" id="ba-time" value="11:00"></div>
-      <div class="form-group">
-        <label class="form-label">Measurement</label>
-        <div style="background:#f4efe4;border-radius:10px;padding:11px 13px;font-size:12.5px;color:var(--ink-soft);"><i class="fas fa-circle-info" style="color:var(--marigold-dark);"></i>&nbsp; Will be taken by the tailor when you visit</div>
-      </div>
+      <div class="form-group"><label class="form-label">Preferred Date</label><input type="date" class="form-input" id="ba-date" onchange="checkSlotAvailability()"></div>
+      <div class="form-group"><label class="form-label">Preferred Time</label><input type="time" class="form-input" id="ba-time" value="11:00" onchange="checkSlotAvailability()"></div>
+      <div id="ba-slot-banner"></div>
       <div class="form-group"><label class="form-label">Notes (optional)</label><textarea class="form-input" rows="3" placeholder="Any preferences or special instructions"></textarea></div>
     </div>
-    <div style="padding:0 16px;"><div class="btn btn-primary" onclick="confirmBookingFlow()">Confirm Booking</div></div>
+
+    <div class="section-title display">How would you like this handled?</div>
+    <div class="radio-line selected" onclick="pickRadio(this); deliveryMode='Visit Shop';">
+      <div class="radio-dot2"></div>
+      <div><div class="row-title">Visit the shop</div><div class="row-sub">Drop off and pick up in person</div></div>
+    </div>
+    <div class="radio-line" onclick="pickRadio(this); deliveryMode='Pickup & Delivery';">
+      <div class="radio-dot2"></div>
+      <div><div class="row-title">Pickup & delivery</div><div class="row-sub">Tailor Wala picks up and drops off · +₹49</div></div>
+    </div>
+
+    <div class="section-title display">Measurements & Photo</div>
+    <div class="list-row" onclick="profileReturnTo='book-appointment'; openMeasurementProfilePickCustomer()">
+      <div class="icon-box"><i class="fas fa-ruler-combined"></i></div>
+      <div><div class="row-title">Measurements</div><div class="row-sub" id="ba-meas-summary">Will be taken by the tailor when you visit</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+    <div class="list-row" onclick="openReferencePhoto('book-appointment')">
+      <div class="icon-box"><i class="fas fa-camera"></i></div>
+      <div><div class="row-title">Reference photo</div><div class="row-sub" id="ba-photo-summary">Optional — add a design or fabric photo</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="showScreen('payment-select')">Continue to Payment</div></div>
+  </div>
+
+  <!-- PAYMENT SELECT -->
+  <div class="screen" id="payment-select">
+    <header>
+      <div class="back-btn" onclick="showScreen('book-appointment')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Payment</div>
+      <div class="page-sub">Choose how you'll pay</div>
+    </header>
+    <div class="card" style="margin-top:16px;">
+      <div class="price-row"><span>Stitching</span><span id="pay-line-stitch">₹700</span></div>
+      <div class="price-row" id="pay-line-delivery-row" style="display:none;"><span>Pickup & delivery</span><span>₹49</span></div>
+      <div class="price-row total"><span>Total</span><span id="pay-line-total">₹700</span></div>
+    </div>
+    <div class="section-title display">Payment method</div>
+    <div class="pay-row selected" onclick="pickPay(this,'UPI')"><div class="icon-box"><i class="fas fa-indian-rupee-sign"></i></div><div><div class="row-title">UPI</div><div class="row-sub">GPay, PhonePe, Paytm & more</div></div></div>
+    <div class="pay-row" onclick="pickPay(this,'Card')"><div class="icon-box"><i class="fas fa-credit-card"></i></div><div><div class="row-title">Credit / Debit Card</div><div class="row-sub">Visa, Mastercard, RuPay</div></div></div>
+    <div class="pay-row" onclick="pickPay(this,'Cash')"><div class="icon-box"><i class="fas fa-money-bill-wave"></i></div><div><div class="row-title">Cash on visit</div><div class="row-sub">Pay at the shop when ready</div></div></div>
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" id="pay-cta" onclick="confirmBookingFlow()">Pay ₹700 & Confirm</div></div>
   </div>
 
   <!-- BOOKING CONFIRMED -->
   <div class="screen" id="booking-confirmed">
     <div style="padding:60px 30px 20px;text-align:center;">
       <div style="width:76px;height:76px;border-radius:50%;background:var(--leaf-bg);color:var(--leaf);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 18px;"><i class="fas fa-check"></i></div>
-      <h2 style="font-size:20px;color:var(--ink);">Booking Confirmed!</h2>
-      <p style="color:var(--gray);font-size:13px;margin-top:8px;">Booking #TW10021 with <span id="bc-summary-shop2">ABC Tailors</span></p>
+      <h2 style="font-size:20px;color:var(--ink);" id="bc-heading">Booking Sent!</h2>
+      <p style="color:var(--gray);font-size:13px;margin-top:8px;" id="bc-subline">Booking #<span id="bc-id">TW10021</span> sent to Tailor Wala for approval — <span id="bc-summary-shop2">ABC Tailors</span> will be notified once confirmed</p>
     </div>
     <div class="card">
       <div class="price-row"><span>Service</span><span id="bc-summary-service">Shirt Stitching × 2</span></div>
       <div class="price-row"><span>Date & Time</span><span id="bc-summary-datetime">29 Aug, 11:00 AM</span></div>
       <div class="price-row"><span>Shop</span><span id="bc-summary-shop">ABC Tailors</span></div>
-      <div class="price-row"><span>Estimated Price</span><span id="bc-summary-price" style="font-weight:800;color:var(--marigold-dark);">₹700 onwards</span></div>
+      <div class="price-row"><span>Paid via</span><span id="bc-summary-pay">UPI</span></div>
+      <div class="price-row"><span>Total Paid</span><span id="bc-summary-price" style="font-weight:800;color:var(--marigold-dark);">₹700</span></div>
     </div>
-    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="showScreen('booking-detail')">View Booking</div></div>
-    <div style="padding:12px 16px 0;"><div class="btn btn-outline" onclick="showScreen('directions')">Get Directions</div></div>
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="showScreen('booking-detail')">Track Booking</div></div>
+    <div style="padding:12px 16px 0;"><div class="btn btn-outline" onclick="openInvoice(currentBookingId)">View Invoice</div></div>
   </div>
 
   <!-- MY BOOKINGS -->
   <div class="screen" id="my-bookings">
     <header>
-      <div class="back-btn" onclick="showScreen('customer-home')"><i class="fas fa-arrow-left"></i></div>
+      <div class="back-btn" onclick="showScreen('customer-profile')"><i class="fas fa-arrow-left"></i></div>
       <div class="page-title">My Bookings</div>
     </header>
-    <div class="card" onclick="showScreen('booking-detail')" style="cursor:pointer;margin-top:16px;">
-      <div class="tailor-top">
-        <div><div class="tailor-name">ABC Tailors</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Shirt Stitching × 2 · #TW10021</div></div>
-        <span class="pill pill-sky">Accepted</span>
-      </div>
-    </div>
-    <div class="card" style="cursor:pointer;">
-      <div class="tailor-top">
-        <div><div class="tailor-name">Royal Fit Tailors</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Blouse Stitching × 1 · #TW10009</div></div>
-        <span class="pill pill-leaf">Completed</span>
-      </div>
-    </div>
-    <div class="card" style="cursor:pointer;">
-      <div class="tailor-top">
-        <div><div class="tailor-name">Style Point Tailors</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Alteration · #TW09988</div></div>
-        <span class="pill pill-red">Cancelled</span>
-      </div>
-    </div>
+    <div id="my-bookings-list"></div>
   </div>
 
   <!-- BOOKING DETAIL (customer) -->
   <div class="screen" id="booking-detail">
     <header>
       <div class="back-btn" onclick="showScreen('my-bookings')"><i class="fas fa-arrow-left"></i></div>
-      <div class="page-title">Booking #TW10021</div>
-      <div class="page-sub">ABC Tailors · Shirt Stitching × 2</div>
+      <div class="page-title" id="bd-title">Booking #TW10021</div>
+      <div class="page-sub" id="bd-sub">ABC Tailors · Shirt Stitching × 2</div>
     </header>
-    <div class="timeline">
-      <div class="t-item done"><div class="t-dot"><i class="fas fa-check"></i></div><div><div class="t-label">Pending</div><div class="t-sub">Booking placed — 27 Aug, 6:40 PM</div></div></div>
-      <div class="t-item current"><div class="t-dot"><i class="fas fa-check"></i></div><div><div class="t-label">Accepted</div><div class="t-sub">Tailor confirmed your slot — 28 Aug, 9:10 AM</div></div></div>
-      <div class="t-item"><div class="t-dot"></div><div><div class="t-label">Customer Visited</div><div class="t-sub">Pending</div></div></div>
-      <div class="t-item"><div class="t-dot"></div><div><div class="t-label">Measurement Taken</div><div class="t-sub">Pending</div></div></div>
-      <div class="t-item"><div class="t-dot"></div><div><div class="t-label">Stitching</div><div class="t-sub">Pending</div></div></div>
-      <div class="t-item"><div class="t-dot"></div><div><div class="t-label">Ready</div><div class="t-sub">Pending</div></div></div>
-      <div class="t-item"><div class="t-dot"></div><div><div class="t-label">Completed</div><div class="t-sub">Pending</div></div></div>
+    <div class="timeline" id="bd-timeline"></div>
+    <div class="card">
+      <div class="price-row"><span>Preferred date</span><span id="bd-date">29 Aug, 11:00 AM</span></div>
+      <div class="price-row"><span>Quantity</span><span id="bd-qty">2</span></div>
+      <div class="price-row"><span>Handling</span><span id="bd-delivery">Visit Shop</span></div>
+      <div class="price-row"><span>Est. price</span><span id="bd-price">₹700</span></div>
     </div>
     <div class="card">
-      <div class="price-row"><span>Preferred date</span><span>29 Aug, 11:00 AM</span></div>
-      <div class="price-row"><span>Quantity</span><span>2</span></div>
-      <div class="price-row"><span>Est. price</span><span>₹700 onwards</span></div>
+      <div class="price-row"><span>Tailor Shop</span><span id="bd-tailor-name">ABC Tailors</span></div>
+      <div class="price-row"><span>Phone</span><span id="bd-tailor-phone">+91 90000 11122</span></div>
     </div>
     <div style="padding:0 16px;"><div class="btn btn-outline" onclick="showScreen('directions')"><i class="fas fa-location-dot"></i>&nbsp; Get Directions</div></div>
-    <div style="padding:12px 16px 0;"><div class="btn btn-danger-outline" onclick="alert('Booking cancelled.'); showScreen('my-bookings');">Cancel Booking</div></div>
+    <div style="padding:12px 16px 0;"><div class="btn btn-outline" onclick="callShop(bdTailorName)"><i class="fas fa-phone"></i>&nbsp; Call Tailor Shop</div></div>
+    <div style="padding:12px 16px 0;"><div class="btn btn-outline" onclick="openInvoice(currentBookingId)"><i class="fas fa-file-invoice"></i>&nbsp; View Invoice</div></div>
+    <div id="bd-review-btn" style="padding:12px 16px 0;display:none;"><div class="btn btn-ink" onclick="openLeaveReview(currentBookingId)"><i class="fas fa-star"></i>&nbsp; Leave a Review</div></div>
+    <div id="bd-quote-actions" style="display:none;padding:12px 16px 0;">
+      <div class="banner banner-info" style="margin:0 0 12px;"><i class="fas fa-indian-rupee-sign"></i><span>Quote received: <strong id="bd-quote-price">₹0</strong>. Accept to confirm this order, or decline if it doesn't work for you.</span></div>
+      <div class="btn-row">
+        <div class="btn btn-primary" onclick="acceptQuote()">Accept Quote</div>
+        <div class="btn btn-danger-outline" onclick="declineQuote()">Decline</div>
+      </div>
+    </div>
+    <div id="bd-cancel-btn" style="padding:12px 16px 0;"><div class="btn btn-danger-outline" onclick="cancelBooking(currentBookingId)">Cancel Booking</div></div>
   </div>
 
   <!-- DIRECTIONS -->
@@ -602,8 +713,7 @@
       <div class="back-btn" onclick="showScreen('customer-home')"><i class="fas fa-arrow-left"></i></div>
       <div class="page-title">Notifications</div>
     </header>
-    <div class="list-row"><div class="icon-box"><i class="fas fa-check"></i></div><div><div class="row-title">ABC Tailors accepted your booking</div><div class="row-sub">#TW10021 · 20 min ago</div></div></div>
-    <div class="list-row"><div class="icon-box"><i class="fas fa-star"></i></div><div><div class="row-title">Rate your recent visit</div><div class="row-sub">Royal Fit Tailors · Yesterday</div></div></div>
+    <div id="customer-notifications-list"></div>
   </div>
 
   <!-- CUSTOMER PROFILE -->
@@ -619,9 +729,73 @@
     </div>
     <div class="card" style="padding:0;">
       <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('my-bookings')"><div class="icon-box"><i class="fas fa-calendar-check"></i></div><div class="row-title">My Bookings</div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="profileReturnTo='customer-profile'; showScreen('measurement-profile-pick'); renderProfilePickList();"><div class="icon-box"><i class="fas fa-ruler-combined"></i></div><div class="row-title">Measurement Profiles</div><i class="fas fa-chevron-right chev"></i></div>
       <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);"><div class="icon-box"><i class="fas fa-map-marker-alt"></i></div><div class="row-title">Saved Addresses</div><i class="fas fa-chevron-right chev"></i></div>
       <div class="list-row" style="margin:0;border-radius:0;border:none;" onclick="showScreen('customer-login')"><div class="icon-box"><i class="fas fa-arrow-right-from-bracket"></i></div><div class="row-title">Log Out</div></div>
     </div>
+  </div>
+
+  <!-- LEAVE A REVIEW -->
+  <div class="screen" id="leave-review">
+    <header>
+      <div class="back-btn" onclick="showScreen('booking-detail')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Rate Your Experience</div>
+      <div class="page-sub" id="lr-sub">ABC Tailors · Shirt Stitching</div>
+    </header>
+    <div class="star-picker" id="lr-stars">
+      <i class="fas fa-star" data-v="1" onclick="setReviewStars(1)"></i>
+      <i class="fas fa-star" data-v="2" onclick="setReviewStars(2)"></i>
+      <i class="fas fa-star" data-v="3" onclick="setReviewStars(3)"></i>
+      <i class="fas fa-star" data-v="4" onclick="setReviewStars(4)"></i>
+      <i class="fas fa-star" data-v="5" onclick="setReviewStars(5)"></i>
+    </div>
+    <div class="card">
+      <div class="form-group"><label class="form-label">Tell other customers about it</label><textarea class="form-input" id="lr-text" rows="4" placeholder="Fit, finish, timeliness..."></textarea></div>
+    </div>
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="submitReview()">Submit Review</div></div>
+  </div>
+
+  <!-- CUSTOM DESIGN: SELECT TYPE -->
+  <div class="screen" id="custom-type-select">
+    <header>
+      <div class="back-btn" onclick="showScreen('customer-home')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Custom Design</div>
+      <div class="page-sub">What would you like stitched?</div>
+    </header>
+    <div class="section-title display">Select a category</div>
+    <div class="opt-grid" id="custom-type-grid"></div>
+    <div style="padding:16px;"><div class="btn btn-primary" onclick="goToCustomUploadForm()">Continue</div></div>
+  </div>
+
+  <!-- CUSTOM DESIGN REQUEST -->
+  <div class="screen" id="custom-order-form">
+    <header>
+      <div class="back-btn" onclick="showScreen('custom-type-select')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Upload Design</div>
+      <div class="page-sub" id="cof-sub">Blouse — describe what you need</div>
+    </header>
+    <div class="banner banner-info" style="margin-top:16px;"><i class="fas fa-circle-info"></i><span>Not in our list? Upload photos of the design or fabric you want. You'll pick a tailor shop next.</span></div>
+
+    <div class="section-title display">Design / Fabric Photos <span style="font-weight:500;color:var(--gray);text-transform:none;letter-spacing:0;font-family:'Inter',sans-serif;font-size:11.5px;">at least 1</span></div>
+    <div class="upload-grid" id="custom-photo-grid" style="margin-top:8px;"></div>
+
+    <div class="card">
+      <div class="form-group"><label class="form-label">Describe what you need</label><textarea class="form-input" id="cof-desc" rows="4" placeholder="e.g. Sherwani like this photo, in cream color, for a wedding, size Large"></textarea></div>
+      <div class="form-group"><label class="form-label">Preferred Date (optional)</label><input type="date" class="form-input" id="cof-date"></div>
+    </div>
+
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="proceedToChooseTailor()">Request Quote</div></div>
+  </div>
+
+  <!-- CUSTOM DESIGN REQUEST SENT -->
+  <div class="screen" id="custom-order-sent">
+    <div style="padding:60px 30px 20px;text-align:center;">
+      <div style="width:76px;height:76px;border-radius:50%;background:var(--sky-bg);color:var(--sky);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 18px;"><i class="fas fa-paper-plane"></i></div>
+      <h2 style="font-size:20px;color:var(--ink);">Request Sent!</h2>
+      <p style="color:var(--gray);font-size:13px;margin-top:8px;" id="cos-sub">Sent to ABC Tailors — they'll review your photos and send a price quote soon.</p>
+    </div>
+    <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="showScreen('my-bookings')">Track in My Bookings</div></div>
+    <div style="padding:12px 16px 0;"><div class="btn btn-outline" onclick="showScreen('customer-home')">Back to Home</div></div>
   </div>
 
   <!-- =========================================================
@@ -647,50 +821,33 @@
       <div class="header-row">
         <div class="logo-mark"><i class="fas fa-scissors"></i></div>
         <div class="brand" style="font-size:16px;">ABC Tailors</div>
-        <div class="hd-right"><div class="hd-icon-btn" onclick="showScreen('tailor-profile-setup')"><i class="fas fa-gear"></i></div></div>
+        <div class="hd-right">
+          <div class="hd-icon-btn" onclick="renderNotifications(); showScreen('customer-notifications')"><i class="fas fa-bell"></i></div>
+          <div class="hd-icon-btn" onclick="showScreen('tailor-profile-setup')"><i class="fas fa-gear"></i></div>
+        </div>
       </div>
       <div class="greeting">Partner since Jan 2023 · <span class="doc-badge verified" style="margin-left:4px;"><i class="fas fa-badge-check"></i>Verified</span></div>
     </header>
 
+    <div id="tailor-doc-banner"></div>
+
     <div class="stat-grid">
       <div class="stat-card dark"><div class="stat-label">Today's bookings</div><div class="stat-value">6</div></div>
-      <div class="stat-card"><div class="stat-label">New requests</div><div class="stat-value">2</div></div>
+      <div class="stat-card"><div class="stat-label">In progress</div><div class="stat-value">3</div></div>
       <div class="stat-card"><div class="stat-label">This month</div><div class="stat-value">38</div></div>
       <div class="stat-card"><div class="stat-label">Rating</div><div class="stat-value">4.7★</div></div>
     </div>
 
-    <div style="padding:0 16px;"><div class="btn btn-primary" onclick="orderCustomerName='Search or select a customer'; orderMeasurementsCount=0; resetOrderForm('tailor'); showScreen('tailor-new-order')">+ Create Order for Customer</div></div>
+    <div class="banner banner-info" style="margin-top:14px;"><i class="fas fa-circle-info"></i><span>New orders are reviewed and accepted by Tailor Wala admin first. Once accepted, they'll show up below.</span></div>
+
+    <div style="padding:0 16px;margin-top:14px;"><div class="btn btn-primary" onclick="orderCustomerName='Search or select a customer'; orderMeasurementsCount=0; orderPhotoCount=0; resetOrderForm('tailor'); showScreen('tailor-new-order')">+ Create Order for Customer</div></div>
 
     <div class="section-title display">Today's Bookings</div>
-    <div id="tailor-dash-bookings-list">
-    <div class="list-row" onclick="showScreen('tailor-booking-detail')"><div class="icon-box">10</div><div><div class="row-title">Ravi Kumar</div><div class="row-sub">Shirt × 2 · 10:00 AM</div></div><span class="pill pill-sky">Accepted</span></div>
-    <div class="list-row" onclick="showScreen('tailor-booking-detail')"><div class="icon-box">11</div><div><div class="row-title">Gopi Chand</div><div class="row-sub">Pant × 1 · 11:30 AM</div></div><span class="pill pill-sky">Accepted</span></div>
-    <div class="list-row" onclick="showScreen('tailor-booking-detail')"><div class="icon-box">02</div><div><div class="row-title">Suresh Babu</div><div class="row-sub">Alteration · 2:00 PM</div></div><span class="pill pill-sky">Accepted</span></div>
-    </div>
-
-    <div class="section-title display">New Requests</div>
-    <div class="card">
-      <div class="tailor-top">
-        <div><div class="tailor-name">#TW10021</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Shirt Stitching × 2 · Kavya Reddy</div></div>
-      </div>
-      <div class="btn-row" style="margin-top:12px;">
-        <div class="btn btn-primary btn-sm" onclick="alert('Booking accepted!')">Accept</div>
-        <div class="btn btn-danger-outline btn-sm" onclick="alert('Booking rejected.')">Reject</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="tailor-top">
-        <div><div class="tailor-name">#TW10022</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Blouse Stitching × 1 · Sneha Iyer</div></div>
-      </div>
-      <div class="btn-row" style="margin-top:12px;">
-        <div class="btn btn-primary btn-sm" onclick="alert('Booking accepted!')">Accept</div>
-        <div class="btn btn-danger-outline btn-sm" onclick="alert('Booking rejected.')">Reject</div>
-      </div>
-    </div>
+    <div id="tailor-dash-bookings-list"></div>
 
     <div class="nav-tabs">
       <div class="tab active" onclick="showScreen('tailor-dash')"><i class="fas fa-house"></i>Home</div>
-      <div class="tab" onclick="showScreen('tailor-booking-detail')"><i class="fas fa-calendar-check"></i>Bookings</div>
+      <div class="tab" onclick="showScreen('tailor-dash')"><i class="fas fa-calendar-check"></i>Bookings</div>
       <div class="tab" onclick="showScreen('tailor-reviews')"><i class="fas fa-star"></i>Reviews</div>
       <div class="tab" onclick="showScreen('tailor-profile-setup')"><i class="fas fa-gear"></i>Profile</div>
     </div>
@@ -699,17 +856,17 @@
   <div class="screen" id="tailor-booking-detail">
     <header>
       <div class="back-btn" onclick="showScreen('tailor-dash')"><i class="fas fa-arrow-left"></i></div>
-      <div class="page-title">Ravi Kumar</div>
-      <div class="page-sub">Shirt Stitching × 2 · #TW10018</div>
+      <div class="page-title" id="tbd-name">Ravi Kumar</div>
+      <div class="page-sub" id="tbd-sub">Shirt Stitching × 2 · #TW10018</div>
     </header>
     <div class="card" style="margin-top:16px;">
       <div class="price-row"><span>Phone</span><span>+91 98765 43210</span></div>
-      <div class="price-row"><span>Preferred time</span><span>29 Aug, 10:00 AM</span></div>
+      <div class="price-row"><span>Preferred time</span><span id="tbd-time">29 Aug, 10:00 AM</span></div>
       <div class="price-row"><span>Notes</span><span>Slim fit, French cuffs</span></div>
     </div>
     <div class="section-title display">Update Status</div>
     <div class="card">
-      <select class="form-input">
+      <select class="form-input" id="tbd-status-select">
         <option>Pending</option>
         <option>Accepted</option>
         <option selected>Customer Visited</option>
@@ -718,9 +875,9 @@
         <option>Ready</option>
         <option>Completed</option>
       </select>
-      <div class="btn btn-primary" style="margin-top:12px;" onclick="alert('Status updated!')">Save Update</div>
+      <div class="btn btn-primary" style="margin-top:12px;" onclick="updateTailorStatus()">Save Update</div>
     </div>
-    <div style="padding:0 16px;"><div class="btn btn-outline"><i class="fas fa-message"></i>&nbsp; Message Customer</div></div>
+    <div style="padding:0 16px;"><div class="btn btn-outline" onclick="alert('Calling customer... (demo)')"><i class="fas fa-phone"></i>&nbsp; Call Customer</div></div>
   </div>
 
   <div class="screen" id="tailor-profile-setup">
@@ -728,7 +885,12 @@
       <div class="back-btn" onclick="showScreen('tailor-dash')"><i class="fas fa-arrow-left"></i></div>
       <div class="page-title">Shop Profile</div>
     </header>
-    <div class="card" style="margin-top:16px;">
+    <div class="list-row" onclick="openTailorDocuments('ABC Tailors')">
+      <div class="icon-box"><i class="fas fa-file-shield"></i></div>
+      <div><div class="row-title">Verification Documents</div><div class="row-sub" id="tps-doc-status">Verified</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+    <div class="card" style="margin-top:4px;">
       <div class="form-group"><label class="form-label">Shop Name</label><input class="form-input" value="ABC Tailors"></div>
       <div class="form-group"><label class="form-label">Owner Name</label><input class="form-input" value="Ashok Reddy"></div>
       <div class="form-group"><label class="form-label">Address</label><textarea class="form-input" rows="2">12-4-118, Road No. 3, Banjara Hills</textarea></div>
@@ -748,19 +910,83 @@
     <div style="padding:6px 16px 0;"><div class="btn btn-primary" onclick="alert('Profile saved!')">Save Changes</div></div>
   </div>
 
+  <!-- TAILOR DOCUMENTS -->
+  <div class="screen" id="tailor-documents">
+    <header>
+      <div class="back-btn" onclick="showScreen(docReturnTo)"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Verification Documents</div>
+      <div class="page-sub" id="td-status-sub">Upload these once — admin reviews within 24 hours</div>
+    </header>
+    <div style="padding:14px 16px 0;"><span class="doc-badge" id="td-status-badge"></span></div>
+    <div class="doc-row" id="doc-shop-photo"><div class="icon-box"><i class="fas fa-store"></i></div><div><div class="row-title">Shop Photo</div><div class="row-sub">Storefront, clearly visible signage</div></div><div class="upload-btn" onclick="uploadDoc('doc-shop-photo')">Upload</div></div>
+    <div class="doc-row" id="doc-id-proof"><div class="icon-box"><i class="fas fa-id-card"></i></div><div><div class="row-title">Owner ID Proof</div><div class="row-sub">Aadhaar, PAN or Voter ID</div></div><div class="upload-btn" onclick="uploadDoc('doc-id-proof')">Upload</div></div>
+    <div class="doc-row" id="doc-address-proof"><div class="icon-box"><i class="fas fa-map-location-dot"></i></div><div><div class="row-title">Shop Address Proof</div><div class="row-sub">Rent agreement or utility bill</div></div><div class="upload-btn" onclick="uploadDoc('doc-address-proof')">Upload</div></div>
+    <div style="padding:12px 16px 0;"><div class="btn btn-primary" onclick="submitDocsForReview()">Submit for Review</div></div>
+  </div>
+
   <div class="screen" id="tailor-reviews">
     <header>
       <div class="back-btn" onclick="showScreen('tailor-dash')"><i class="fas fa-arrow-left"></i></div>
       <div class="page-title">Reviews</div>
-      <div class="page-sub">4.7 average · 128 reviews</div>
+      <div class="page-sub">4.7 average · <span id="tr-count">128</span> reviews</div>
     </header>
-    <div class="review-card" style="margin-top:16px;">
-      <div class="review-top"><div class="review-avatar">R</div><div><div class="review-name">Ravi Kumar</div><div class="review-date">3 days ago · ★★★★★</div></div></div>
-      <div class="review-text">Great fit on my formal shirts, and they were ready a day early.</div>
+    <div id="tailor-reviews-list"></div>
+  </div>
+
+  <!-- CHAT (shared, customer<->tailor) -->
+  <div class="screen" id="chat-thread">
+    <header>
+      <div class="back-btn" onclick="showScreen(chatReturnTo)"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title" id="chat-title">ABC Tailors</div>
+      <div class="page-sub">Usually replies within an hour</div>
+    </header>
+    <div class="chat-body" id="chat-body"></div>
+    <div class="chat-input-bar">
+      <input id="chat-input" placeholder="Type a message" onkeydown="if(event.key==='Enter') sendChatMessage()">
+      <button class="chat-send" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
     </div>
-    <div class="review-card">
-      <div class="review-top"><div class="review-avatar" style="background:var(--leaf-bg);color:var(--leaf);">A</div><div><div class="review-name">Anjali Rao</div><div class="review-date">1 week ago · ★★★★★</div></div></div>
-      <div class="review-text">Very polite staff, took time to understand the fit I wanted.</div>
+  </div>
+
+  <!-- REFERENCE PHOTO UPLOAD (shared) -->
+  <div class="screen" id="reference-photo">
+    <header>
+      <div class="back-btn" onclick="showScreen(photoReturnTo)"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Reference Photo</div>
+      <div class="page-sub">Add a picture of the design, fabric or fit you want</div>
+    </header>
+    <div class="upload-grid" id="photo-upload-grid" style="margin-top:16px;"></div>
+    <p style="padding:14px 16px 0;font-size:11.5px;color:var(--gray);">Photos are shared only with the tailor handling your order.</p>
+    <div style="padding:16px;"><div class="btn btn-primary" onclick="savePhotos()">Save Photos</div></div>
+  </div>
+
+  <!-- INVOICE (shared) -->
+  <div class="screen" id="invoice-screen">
+    <header>
+      <div class="back-btn" onclick="showScreen(invoiceReturnTo)"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Invoice</div>
+    </header>
+    <div class="invoice-head">
+      <div class="logo-mark" style="margin:0 auto;"><i class="fas fa-scissors"></i></div>
+      <h2 style="font-size:18px;margin-top:10px;">Tailor Wala</h2>
+      <div class="invoice-num">Invoice <span id="inv-id">#INV-10021</span></div>
+    </div>
+    <div class="card">
+      <div class="price-row"><span>Customer</span><span id="inv-customer">Priya Sharma</span></div>
+      <div class="price-row"><span>Tailor</span><span id="inv-tailor">ABC Tailors</span></div>
+      <div class="price-row"><span>Date</span><span id="inv-date">29 Aug 2026</span></div>
+    </div>
+    <div class="card">
+      <div class="price-row"><span id="inv-service-line">Shirt Stitching × 2</span><span id="inv-service-price">₹700</span></div>
+      <div class="price-row" id="inv-delivery-line" style="display:none;"><span>Pickup & delivery</span><span>₹49</span></div>
+      <div class="price-row total"><span>Total</span><span id="inv-total">₹700</span></div>
+    </div>
+    <div class="card">
+      <div class="price-row"><span>Payment method</span><span id="inv-pay">UPI</span></div>
+      <div class="price-row"><span>Status</span><span style="color:var(--leaf);font-weight:700;" id="inv-status">Paid</span></div>
+    </div>
+    <div class="btn-row" style="padding:0 16px;">
+      <div class="btn btn-outline" onclick="alert('Invoice downloaded as PDF (demo).')"><i class="fas fa-download"></i>&nbsp; Download</div>
+      <div class="btn btn-outline" onclick="alert('Invoice shared (demo).')"><i class="fas fa-share-nodes"></i>&nbsp; Share</div>
     </div>
   </div>
 
@@ -783,14 +1009,23 @@
         <select class="form-input" id="tno-service"><option>Shirt Stitching</option><option>Pant Stitching</option><option>Blouse Stitching</option><option>Alterations</option><option>Dress Stitching</option></select>
       </div>
       <div class="form-group"><label class="form-label">Quantity</label><input type="number" class="form-input" id="tno-qty" value="1" min="1"></div>
-      <div class="form-group"><label class="form-label">Preferred Date</label><input type="date" class="form-input" id="tno-date"></div>
-      <div class="form-group"><label class="form-label">Preferred Time</label><input type="time" class="form-input" id="tno-time" value="11:00"></div>
+      <div class="form-group"><label class="form-label">Preferred Date</label><input type="date" class="form-input" id="tno-date" onchange="checkSlotAvailabilityGeneric('tno-date','tno-time','ABC Tailors','tno-slot-banner')"></div>
+      <div class="form-group"><label class="form-label">Preferred Time</label><input type="time" class="form-input" id="tno-time" value="11:00" onchange="checkSlotAvailabilityGeneric('tno-date','tno-time','ABC Tailors','tno-slot-banner')"></div>
+      <div id="tno-slot-banner"></div>
       <div class="form-group"><label class="form-label">Notes (optional)</label><textarea class="form-input" id="tno-notes" rows="3" placeholder="Fit, fabric, special instructions"></textarea></div>
     </div>
+
+    <div class="radio-line selected" onclick="pickRadio(this); deliveryMode='Visit Shop';"><div class="radio-dot2"></div><div class="row-title">Visit the shop</div></div>
+    <div class="radio-line" onclick="pickRadio(this); deliveryMode='Pickup & Delivery';"><div class="radio-dot2"></div><div class="row-title">Pickup & delivery (+₹49)</div></div>
 
     <div class="list-row" onclick="openMeasurements('tailor-new-order')">
       <div class="icon-box"><i class="fas fa-ruler-combined"></i></div>
       <div><div class="row-title">Add Measurements</div><div class="row-sub" id="tno-meas-summary">Not added yet</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+    <div class="list-row" onclick="openReferencePhoto('tailor-new-order')">
+      <div class="icon-box"><i class="fas fa-camera"></i></div>
+      <div><div class="row-title">Reference Photo</div><div class="row-sub" id="tno-photo-summary">Not added yet</div></div>
       <i class="fas fa-chevron-right chev"></i>
     </div>
 
@@ -818,12 +1053,18 @@
       <div class="form-group"><label class="form-label">Quantity</label><input type="number" class="form-input" id="ano-qty" value="1" min="1"></div>
       <div class="form-group"><label class="form-label">Preferred Date</label><input type="date" class="form-input" id="ano-date"></div>
       <div class="form-group"><label class="form-label">Preferred Time</label><input type="time" class="form-input" id="ano-time" value="11:00"></div>
+      <div id="ano-slot-banner"></div>
       <div class="form-group"><label class="form-label">Notes (optional)</label><textarea class="form-input" id="ano-notes" rows="3" placeholder="Fit, fabric, special instructions"></textarea></div>
     </div>
 
     <div class="list-row" onclick="openMeasurements('admin-new-order')">
       <div class="icon-box"><i class="fas fa-ruler-combined"></i></div>
       <div><div class="row-title">Add Measurements</div><div class="row-sub" id="ano-meas-summary">Not added yet</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
+    <div class="list-row" onclick="openReferencePhoto('admin-new-order')">
+      <div class="icon-box"><i class="fas fa-camera"></i></div>
+      <div><div class="row-title">Reference Photo</div><div class="row-sub" id="ano-photo-summary">Not added yet</div></div>
       <i class="fas fa-chevron-right chev"></i>
     </div>
 
@@ -868,7 +1109,7 @@
     <header>
       <div class="back-btn" onclick="showScreen(measureReturnTo)"><i class="fas fa-arrow-left"></i></div>
       <div class="page-title">Add Measurements</div>
-      <div class="page-sub">Recorded once, reused for this order</div>
+      <div class="page-sub" id="am-sub">Recorded once, reused for this order</div>
     </header>
 
     <div class="link-row" onclick="fillDemoMeasurements()"><i class="fas fa-clock-rotate-left"></i> Copy from customer's last order</div>
@@ -929,10 +1170,15 @@
       <div class="price-row"><span>Customer</span><span id="rev-customer">—</span></div>
       <div class="price-row"><span>Service</span><span id="rev-service">—</span></div>
       <div class="price-row"><span>Date & Time</span><span id="rev-datetime">—</span></div>
+      <div class="price-row"><span>Handling</span><span id="rev-delivery">Visit Shop</span></div>
     </div>
     <div class="list-row">
       <div class="icon-box"><i class="fas fa-ruler-combined"></i></div>
       <div><div class="row-title">Measurements</div><div class="row-sub" id="rev-measurements">Not added</div></div>
+    </div>
+    <div class="list-row">
+      <div class="icon-box"><i class="fas fa-camera"></i></div>
+      <div><div class="row-title">Reference Photo</div><div class="row-sub" id="rev-photo">Not added</div></div>
     </div>
     <div class="list-row" id="rev-assign-row" style="display:none;">
       <div class="icon-box" style="background:var(--sand);color:var(--sand-text);"><i class="fas fa-user-gear"></i></div>
@@ -962,21 +1208,43 @@
     <div class="card">
       <div class="price-row"><span>Cancelled bookings</span><span style="color:var(--red);font-weight:700;">120</span></div>
       <div class="price-row"><span>Pending approvals</span><span style="color:var(--sand-text);font-weight:700;">5 tailors</span></div>
+      <div class="price-row"><span>Commission earned (this month)</span><span style="color:var(--leaf);font-weight:700;">₹1,84,200</span></div>
     </div>
+
+    <div class="section-title display">Orders Awaiting Approval</div>
+    <div id="admin-new-requests"></div>
+
     <div class="section-title display">Manage</div>
     <div class="card" style="padding:0;">
-      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="orderCustomerName='Search or select a customer'; orderMeasurementsCount=0; orderAssignedTailor=null; resetOrderForm('admin'); showScreen('admin-new-order')"><div class="icon-box" style="background:var(--sand);color:var(--sand-text);"><i class="fas fa-plus"></i></div><div><div class="row-title">Create Order & Assign</div><div class="row-sub">Book on behalf of a customer</div></div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="orderCustomerName='Search or select a customer'; orderMeasurementsCount=0; orderAssignedTailor=null; orderPhotoCount=0; resetOrderForm('admin'); showScreen('admin-new-order')"><div class="icon-box" style="background:var(--sand);color:var(--sand-text);"><i class="fas fa-plus"></i></div><div><div class="row-title">Create Order & Assign</div><div class="row-sub">Book on behalf of a customer</div></div><i class="fas fa-chevron-right chev"></i></div>
       <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('admin-tailors')"><div class="icon-box"><i class="fas fa-user-friends"></i></div><div><div class="row-title">Tailors</div><div class="row-sub">87 total · 5 pending approval</div></div><i class="fas fa-chevron-right chev"></i></div>
       <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('admin-customers')"><div class="icon-box"><i class="fas fa-users"></i></div><div><div class="row-title">Customers</div><div class="row-sub">1,240 total</div></div><i class="fas fa-chevron-right chev"></i></div>
       <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('admin-services')"><div class="icon-box"><i class="fas fa-list-check"></i></div><div><div class="row-title">Services</div><div class="row-sub">5 categories</div></div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="renderPayouts(); showScreen('admin-payouts')"><div class="icon-box" style="background:var(--leaf-bg);color:var(--leaf);"><i class="fas fa-wallet"></i></div><div><div class="row-title">Payouts</div><div class="row-sub">Commission & tailor settlements</div></div><i class="fas fa-chevron-right chev"></i></div>
       <div class="list-row" style="margin:0;border-radius:0;border:none;" onclick="showScreen('admin-locations')"><div class="icon-box"><i class="fas fa-map-location-dot"></i></div><div><div class="row-title">Locations</div><div class="row-sub">1 city · 14 areas</div></div><i class="fas fa-chevron-right chev"></i></div>
     </div>
     <div class="nav-tabs">
       <div class="tab active" onclick="showScreen('admin-dashboard')"><i class="fas fa-house"></i>Home</div>
       <div class="tab" onclick="showScreen('admin-tailors')"><i class="fas fa-user-friends"></i>Tailors</div>
       <div class="tab" onclick="showScreen('admin-customers')"><i class="fas fa-users"></i>Customers</div>
-      <div class="tab" onclick="showScreen('admin-services')"><i class="fas fa-list-check"></i>Services</div>
+      <div class="tab" onclick="renderPayouts(); showScreen('admin-payouts')"><i class="fas fa-wallet"></i>Payouts</div>
+      <div class="tab" onclick="showScreen('admin-profile')"><i class="fas fa-user"></i>Profile</div>
     </div>
+  </div>
+
+  <!-- ADMIN PAYOUTS -->
+  <div class="screen" id="admin-payouts">
+    <header>
+      <div class="back-btn" onclick="showScreen('admin-dashboard')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Payouts</div>
+      <div class="page-sub">Platform commission is 12% per order</div>
+    </header>
+    <div class="stat-grid">
+      <div class="stat-card dark"><div class="stat-label">Collected this month</div><div class="stat-value">₹15,35,000</div></div>
+      <div class="stat-card"><div class="stat-label">Platform commission</div><div class="stat-value">₹1,84,200</div></div>
+    </div>
+    <div class="section-title display">Tailor Settlements</div>
+    <div id="admin-payouts-list"></div>
   </div>
 
   <div class="screen" id="admin-tailors">
@@ -985,9 +1253,7 @@
       <div class="page-title">Tailors</div>
     </header>
     <div class="card" style="margin-top:16px;"><input class="form-input" placeholder="Search tailors"></div>
-    <div id="admin-tailors-list">
-      <!-- rendered dynamically from adminTailorsList -->
-    </div>
+    <div id="admin-tailors-list"></div>
     <div style="padding:12px 16px;"><div class="btn btn-outline" onclick="resetAddTailorForm(); showScreen('add-tailor')">+ Add New Tailor</div></div>
   </div>
 
@@ -995,10 +1261,16 @@
   <div class="screen" id="add-tailor">
     <header>
       <div class="back-btn" onclick="showScreen('admin-tailors')"><i class="fas fa-arrow-left"></i></div>
-      <div class="page-title">Create Tailor Login</div>
-      <div class="page-sub">The tailor sets up their own shop profile after logging in</div>
+      <div class="page-title">Register Tailor Shop</div>
+      <div class="page-sub">Each shop is run by a single tailor</div>
     </header>
     <div class="card" style="margin-top:16px;">
+      <div class="form-group"><label class="form-label">Shop Name</label><input class="form-input" id="at-shop-name" placeholder="e.g. New Look Tailors"></div>
+      <div class="form-group"><label class="form-label">Owner / Tailor Name</label><input class="form-input" id="at-owner-name" placeholder="Full name"></div>
+      <div class="form-group"><label class="form-label">Area</label><input class="form-input" id="at-area" placeholder="e.g. Kondapur"></div>
+      <div class="form-group"><label class="form-label">Address</label><textarea class="form-input" id="at-address" rows="2" placeholder="Shop number, street, landmark"></textarea></div>
+    </div>
+    <div class="card">
       <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" id="at-phone" placeholder="+91 98765 43210"></div>
       <div class="form-group">
         <label class="form-label">Password</label>
@@ -1009,8 +1281,8 @@
       </div>
       <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-input" id="at-password-confirm" placeholder="Re-enter password"></div>
     </div>
-    <p style="padding:0 16px;font-size:11.5px;color:var(--gray);line-height:1.5;"><i class="fas fa-circle-info"></i>&nbsp; Once created, share this phone number and password with the tailor. They'll log in and add their shop name, services, pricing, and hours themselves.</p>
-    <div style="padding:16px;"><div class="btn btn-primary" onclick="saveNewTailor()">Create Tailor Account</div></div>
+    <p style="padding:0 16px;font-size:11.5px;color:var(--gray);line-height:1.5;"><i class="fas fa-circle-info"></i>&nbsp; Once created, share this phone number and password with the tailor so they can log in, upload documents, and manage their day's bookings. New orders for this shop are still reviewed and accepted by admin first.</p>
+    <div style="padding:16px;"><div class="btn btn-primary" onclick="saveNewTailor()">Register Shop & Create Login</div></div>
   </div>
 
   <!-- TAILOR LOGIN CREATED -->
@@ -1023,9 +1295,9 @@
     <div class="card">
       <div class="price-row"><span>Phone Number</span><span id="tlc-phone">—</span></div>
       <div class="price-row"><span>Password</span><span id="tlc-password">—</span></div>
-      <div class="price-row"><span>Status</span><span style="color:var(--sand-text);font-weight:700;">Pending shop setup</span></div>
+      <div class="price-row"><span>Status</span><span style="color:var(--sand-text);font-weight:700;">Pending shop setup & documents</span></div>
     </div>
-    <p style="padding:0 16px;font-size:12px;color:var(--gray);">They'll log in from the Tailor app and fill in their shop name, owner name, services and pricing themselves.</p>
+    <p style="padding:0 16px;font-size:12px;color:var(--gray);">They'll log in from the Tailor app, fill in shop details, and upload verification documents themselves.</p>
     <div style="padding:12px 16px 0;"><div class="btn btn-primary" onclick="showScreen('admin-tailors')">Done</div></div>
   </div>
 
@@ -1036,11 +1308,23 @@
       <div class="page-sub" id="atd-sub">Banjara Hills · Registered Jan 2023</div>
     </header>
     <div style="padding:14px 16px 0;"><span class="doc-badge verified" id="atd-badge"><i class="fas fa-badge-check"></i>Documents Verified</span></div>
+    <div class="card" style="margin-top:12px;">
+      <div class="price-row"><span>Owner / Tailor</span><span id="atd-owner">Ashok Reddy</span></div>
+      <div class="price-row"><span>Phone</span><span id="atd-phone">+91 90000 11122</span></div>
+    </div>
+    <div class="list-row" onclick="docReturnTo='admin-tailor-detail'; openTailorDocuments(adminTailorsList[currentAdminTailorIndex].name)">
+      <div class="icon-box"><i class="fas fa-file-shield"></i></div>
+      <div><div class="row-title">View Documents</div><div class="row-sub">Shop photo, ID and address proof</div></div>
+      <i class="fas fa-chevron-right chev"></i>
+    </div>
     <div class="stat-grid">
       <div class="stat-card"><div class="stat-label">Bookings</div><div class="stat-value">412</div></div>
       <div class="stat-card"><div class="stat-label">Rating</div><div class="stat-value">4.7★</div></div>
     </div>
-    <div class="card">
+    <div class="section-title display">Branches <span style="font-weight:500;color:var(--gray);text-transform:none;letter-spacing:0;font-family:'Inter',sans-serif;font-size:11.5px;">1 tailor per branch</span></div>
+    <div id="atd-branches-list"></div>
+    <div style="padding:0 16px;"><div class="btn btn-outline" onclick="openAddBranch()">+ Add Branch</div></div>
+    <div class="card" style="margin-top:16px;">
       <div class="form-group"><label class="form-label">Shirt price (₹ onwards)</label><input class="form-input" value="350"></div>
       <div class="form-group"><label class="form-label">Pant price (₹ onwards)</label><input class="form-input" value="300"></div>
       <div class="btn btn-primary" onclick="alert('Prices updated!')">Save Prices</div>
@@ -1049,6 +1333,22 @@
       <div class="btn btn-outline" onclick="toggleBlockTailor()"><i class="fas fa-ban"></i>&nbsp; Block Tailor</div>
       <div class="btn btn-outline" onclick="toggleApproveTailor()"><i class="fas fa-check"></i>&nbsp; Approve</div>
     </div>
+  </div>
+
+  <!-- ADD BRANCH -->
+  <div class="screen" id="admin-add-branch">
+    <header>
+      <div class="back-btn" onclick="showScreen('admin-tailor-detail')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Add Branch</div>
+      <div class="page-sub" id="aab-sub">New branch under ABC Tailors</div>
+    </header>
+    <div class="card" style="margin-top:16px;">
+      <div class="form-group"><label class="form-label">Branch Name / Area</label><input class="form-input" id="aab-name" placeholder="e.g. Gachibowli Branch"></div>
+      <div class="form-group"><label class="form-label">Address</label><textarea class="form-input" id="aab-address" rows="2" placeholder="Shop number, street, landmark"></textarea></div>
+      <div class="form-group"><label class="form-label">Branch Tailor's Phone</label><input class="form-input" id="aab-phone" placeholder="+91 98765 43210"></div>
+    </div>
+    <p style="padding:0 16px;font-size:11.5px;color:var(--gray);">Each branch runs with its own single tailor, just like the main shop.</p>
+    <div style="padding:12px 16px 0;"><div class="btn btn-primary" onclick="saveNewBranch()">Save Branch</div></div>
   </div>
 
   <div class="screen" id="admin-customers">
@@ -1065,6 +1365,10 @@
         <div><div class="tailor-name">Booking #TW09988</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">Order delayed by 3 days</div></div>
         <span class="pill pill-red">Open</span>
       </div>
+      <div class="btn-row" style="margin-top:12px;">
+        <div class="btn btn-primary btn-sm" onclick="alert('Marked as resolved and customer notified.')">Resolve</div>
+        <div class="btn btn-outline btn-sm" onclick="alert('Escalated to shop owner.')">Escalate</div>
+      </div>
     </div>
   </div>
 
@@ -1074,9 +1378,7 @@
       <div class="page-title">Services</div>
       <div class="page-sub">Master catalog shown to every customer</div>
     </header>
-    <div id="admin-services-list">
-      <!-- rendered dynamically from serviceCatalog -->
-    </div>
+    <div id="admin-services-list"></div>
     <div style="padding:12px 16px;"><div class="btn btn-outline" onclick="openAddService()">+ Add Service Category</div></div>
   </div>
 
@@ -1101,6 +1403,7 @@
       </div>
       <div class="form-group"><label class="form-label">Base Price (₹ onwards)</label><input type="number" class="form-input" id="svc-price" placeholder="300"></div>
       <div class="form-group"><label class="form-label">Estimated Turnaround</label><input class="form-input" id="svc-days" placeholder="e.g. 2-3 days"></div>
+      <div class="form-group"><label class="form-label">Type Options (comma-separated)</label><input class="form-input" id="svc-types" placeholder="e.g. Formal, Casual, Full Sleeve"></div>
       <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="svc-desc" rows="3" placeholder="What this service covers"></textarea></div>
       <div class="btn btn-primary" onclick="saveService()">Save Service</div>
     </div>
@@ -1122,7 +1425,29 @@
     <div style="padding:6px 16px 0;"><div class="btn btn-outline">+ Add City</div></div>
   </div>
 
+  <!-- ADMIN PROFILE -->
+  <div class="screen" id="admin-profile">
+    <header>
+      <div class="back-btn" onclick="showScreen('admin-dashboard')"><i class="fas fa-arrow-left"></i></div>
+      <div class="page-title">Profile</div>
+    </header>
+    <div class="card" style="margin-top:16px;text-align:center;">
+      <div class="avatar-lg">A</div>
+      <div style="font-weight:700;font-size:15px;">Platform Admin</div>
+      <div style="color:var(--gray);font-size:12px;">admin@tailorwala.in · Hyderabad Ops</div>
+    </div>
+    <div class="card" style="padding:0;">
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('admin-tailors')"><div class="icon-box"><i class="fas fa-user-friends"></i></div><div class="row-title">Tailors</div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="showScreen('admin-customers')"><div class="icon-box"><i class="fas fa-users"></i></div><div class="row-title">Customers</div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);" onclick="renderPayouts(); showScreen('admin-payouts')"><div class="icon-box"><i class="fas fa-wallet"></i></div><div class="row-title">Payouts</div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;border-bottom:1px solid var(--border);"><div class="icon-box"><i class="fas fa-shield-halved"></i></div><div class="row-title">Account Settings</div><i class="fas fa-chevron-right chev"></i></div>
+      <div class="list-row" style="margin:0;border-radius:0;border:none;" onclick="showScreen('customer-login')"><div class="icon-box"><i class="fas fa-arrow-right-from-bracket"></i></div><div class="row-title">Log Out</div></div>
+    </div>
+  </div>
+
 </div>
+
+<div id="wa-toast"><i class="fab fa-whatsapp"></i><span id="wa-toast-text"></span></div>
 
 <script>
 function showScreen(id){
@@ -1131,14 +1456,10 @@ function showScreen(id){
   if (el) { el.classList.add('active'); window.scrollTo(0,0); }
 }
 
-function selectService(name, emoji){
-  document.getElementById('service-detail-title').textContent = name;
-  showScreen('service-detail');
-}
-
 function pickOpt(el){
   el.parentElement.querySelectorAll('.opt-tile').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
+  if (el.dataset.type) selectedType = el.dataset.type;
 }
 
 function pickRadio(el){
@@ -1149,6 +1470,19 @@ function pickRadio(el){
 function toggleChip(el){
   el.parentElement.querySelectorAll('.chip').forEach(c => { if (c !== el && c.textContent.trim() !== 'Filters') c.classList.remove('active'); });
   el.classList.toggle('active');
+}
+
+function goSearch(){ goFindTailors(); }
+
+/* ---------- whatsapp notification simulation ---------- */
+function sendWhatsApp(message){
+  const toast = document.getElementById('wa-toast');
+  const textEl = document.getElementById('wa-toast-text');
+  if (!toast || !textEl) return;
+  textEl.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(window._waTimer);
+  window._waTimer = setTimeout(() => { toast.classList.remove('show'); }, 3200);
 }
 
 let qty = 1;
@@ -1166,15 +1500,14 @@ function stepQty2(d){
 
 /* ---------- service catalog (managed by admin, consumed by the customer app) ---------- */
 let serviceCatalog = [
-  {name:'Shirt Stitching', emoji:'👔', category:"Men's Wear", basePrice:300, days:'2-3 days', desc:'Custom-fit shirts stitched to your measurements.'},
-  {name:'Pant Stitching', emoji:'👖', category:"Men's Wear", basePrice:280, days:'2-3 days', desc:'Formal and casual trousers, tailored fit.'},
-  {name:'Blouse Stitching', emoji:'👗', category:"Women's Wear", basePrice:250, days:'3-4 days', desc:'Blouses stitched to match your saree or lehenga.'},
-  {name:'Alterations', emoji:'✂️', category:'Alterations', basePrice:100, days:'1-2 days', desc:'Resizing, hemming and quick fixes.'},
-  {name:'Dress Stitching', emoji:'🧵', category:"Women's Wear", basePrice:400, days:'3-5 days', desc:'Custom dresses stitched from your chosen fabric.'}
+  {name:'Shirt Stitching', emoji:'👔', category:"Men's Wear", basePrice:300, days:'2-3 days', desc:'Custom-fit shirts stitched to your measurements.', types:['Formal Shirt','Casual Shirt','Full Sleeve','Half Sleeve']},
+  {name:'Pant Stitching', emoji:'👖', category:"Men's Wear", basePrice:280, days:'2-3 days', desc:'Formal and casual trousers, tailored fit.', types:['Formal Trouser','Casual Chino','Slim Fit','Regular Fit']},
+  {name:'Blouse Stitching', emoji:'👗', category:"Women's Wear", basePrice:250, days:'3-4 days', desc:'Blouses stitched to match your saree or lehenga.', types:['Sleeveless','Elbow Sleeve','Full Sleeve','Boat Neck']},
+  {name:'Alterations', emoji:'✂️', category:'Alterations', basePrice:100, days:'1-2 days', desc:'Resizing, hemming and quick fixes.', types:['Take In','Let Out','Hemming','Zipper Repair']},
+  {name:'Dress Stitching', emoji:'🧵', category:"Women's Wear", basePrice:400, days:'3-5 days', desc:'Custom dresses stitched from your chosen fabric.', types:['A-Line','Bodycon','Anarkali','Fit & Flare']}
 ];
 let editingServiceIndex = null;
 
-/* per-tailor pricing for each catalog service — this is what auto-fills once a customer picks a service + a tailor */
 let tailorPricing = {
   'ABC Tailors': {'Shirt Stitching':350, 'Pant Stitching':300, 'Alterations':100},
   'Style Point Tailors': {'Shirt Stitching':300, 'Pant Stitching':280, 'Alterations':90},
@@ -1182,8 +1515,27 @@ let tailorPricing = {
   'Perfect Stitch': {'Shirt Stitching':280, 'Pant Stitching':260, 'Alterations':80}
 };
 
+/* Shop contact info shown directly to the customer once they've booked — no in-app chat. */
+let tailorContacts = {
+  'ABC Tailors': {phone:'+91 90000 11122', address:'12-4-118, Road No. 3, Banjara Hills'},
+  'Style Point Tailors': {phone:'+91 90000 22233', address:'8-2-45, Road No. 5, Jubilee Hills'},
+  'Royal Fit Tailors': {phone:'+91 90000 33344', address:'Plot 12, Kondapur Main Road'},
+  'Perfect Stitch': {phone:'+91 90000 44455', address:'Shop 4, Ameerpet Circle'}
+};
+
+function callShop(tailorName){
+  const c = tailorContacts[tailorName] || {phone:'+91 90000 11122'};
+  alert('Calling ' + tailorName + ' — ' + c.phone + ' (demo)');
+}
+
 let selectedService = null;
+let selectedType = null;
 let selectedTailorName = 'ABC Tailors';
+let knowsMeasurements = true;
+let deliveryMode = 'Visit Shop';
+let selectedPayMethod = 'UPI';
+let currentBookingId = 'TW10021';
+let bdTailorName = 'ABC Tailors';
 
 function renderCustomerServiceTiles(){
   const grid = document.getElementById('customer-service-grid');
@@ -1193,7 +1545,7 @@ function renderCustomerServiceTiles(){
     const shortLabel = s.name.replace(' Stitching','').replace('Alterations','Alteration');
     html += '<div class="service-tile" onclick="selectService(\'' + s.name.replace(/'/g,"\\'") + '\')"><span class="emoji">' + s.emoji + '</span><div class="lbl">' + shortLabel + '</div></div>';
   });
-  html += '<div class="service-tile" onclick="selectedService=null; goFindTailors();"><span class="emoji">➕</span><div class="lbl">More</div></div>';
+  html += '<div class="service-tile custom-tile" onclick="selectCustomDesign()"><span class="emoji">🎨</span><div class="lbl">Others / Custom</div></div>';
   grid.innerHTML = html;
 }
 
@@ -1221,6 +1573,7 @@ function openAddService(){
   document.getElementById('svc-category').value = "Men's Wear";
   document.getElementById('svc-price').value = '';
   document.getElementById('svc-days').value = '';
+  document.getElementById('svc-types').value = '';
   document.getElementById('svc-desc').value = '';
   document.getElementById('svc-delete-btn').style.display = 'none';
   showScreen('add-service');
@@ -1235,6 +1588,7 @@ function openEditService(i){
   document.getElementById('svc-category').value = s.category;
   document.getElementById('svc-price').value = s.basePrice;
   document.getElementById('svc-days').value = s.days;
+  document.getElementById('svc-types').value = (s.types || []).join(', ');
   document.getElementById('svc-desc').value = s.desc;
   document.getElementById('svc-delete-btn').style.display = 'block';
   showScreen('add-service');
@@ -1243,12 +1597,14 @@ function openEditService(i){
 function saveService(){
   const name = document.getElementById('svc-name').value.trim();
   if (!name){ alert('Please enter a service name.'); return; }
+  const typesRaw = document.getElementById('svc-types').value.trim();
   const data = {
     name: name,
     emoji: document.getElementById('svc-emoji').value.trim() || '🧵',
     category: document.getElementById('svc-category').value,
     basePrice: parseInt(document.getElementById('svc-price').value) || 0,
     days: document.getElementById('svc-days').value.trim() || '2-3 days',
+    types: typesRaw ? typesRaw.split(',').map(t => t.trim()).filter(Boolean) : ['Standard'],
     desc: document.getElementById('svc-desc').value.trim()
   };
   if (editingServiceIndex === null) serviceCatalog.push(data);
@@ -1270,11 +1626,67 @@ function deleteService(){
   showScreen('admin-services');
 }
 
-/* ---------- customer flow: service -> nearby tailors -> tailor profile -> booking, price auto-fills at each step ---------- */
+/* ---------- customer flow: service -> nearby tailors -> tailor profile -> booking ---------- */
 function selectService(name){
   selectedService = name;
+  selectedType = null;
   document.getElementById('service-detail-title').textContent = name;
+  const svc = serviceCatalog.find(s => s.name === name);
+  const grid = document.getElementById('service-type-grid');
+  const types = (svc && svc.types && svc.types.length) ? svc.types : ['Standard'];
+  selectedType = types[0];
+  grid.innerHTML = types.map((t, i) =>
+    '<div class="opt-tile' + (i === 0 ? ' selected' : '') + '" data-type="' + t.replace(/"/g,'') + '" onclick="pickOpt(this)">' + t + '</div>'
+  ).join('');
+  document.getElementById('sd-photo-summary').textContent = 'Helps the tailor get the fit right';
   showScreen('service-detail');
+}
+
+/* Custom design ("Others") flow: pick a garment type, upload photos + description,
+   THEN choose which tailor shop to send the request to. That tailor reviews it and quotes a price. */
+let customTypeOptions = ['Blouse','Dress','Sherwani','Kurta','Lehenga','Suit','Saree Fall','Other'];
+let customSelectedType = null;
+let customPhotoCount = 0;
+let customDescStore = '';
+let customDateStore = '';
+
+function selectCustomDesign(){
+  selectedService = 'Custom Design';
+  renderCustomTypeGrid();
+  showScreen('custom-type-select');
+}
+
+function renderCustomTypeGrid(){
+  customSelectedType = customTypeOptions[0];
+  const grid = document.getElementById('custom-type-grid');
+  grid.innerHTML = customTypeOptions.map((t, i) =>
+    '<div class="opt-tile' + (i === 0 ? ' selected' : '') + '" onclick="pickCustomType(this,\'' + t.replace(/'/g,"\\'") + '\')">' + t + '</div>'
+  ).join('');
+}
+
+function pickCustomType(el, type){
+  el.parentElement.querySelectorAll('.opt-tile').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  customSelectedType = type;
+}
+
+function goToCustomUploadForm(){
+  selectedType = customSelectedType;
+  customPhotoCount = 0;
+  document.getElementById('cof-sub').textContent = customSelectedType + ' — describe what you need';
+  document.getElementById('cof-desc').value = '';
+  document.getElementById('cof-date').value = '';
+  renderCustomPhotoGrid();
+  showScreen('custom-order-form');
+}
+
+function proceedToChooseTailor(){
+  if (customPhotoCount < 1){ alert('Please add at least one photo of the design or fabric you want.'); return; }
+  const desc = document.getElementById('cof-desc').value.trim();
+  if (!desc){ alert('Please describe what you need — this helps the tailor quote accurately.'); return; }
+  customDescStore = desc;
+  customDateStore = document.getElementById('cof-date').value;
+  goFindTailors();
 }
 
 function goFindTailors(){
@@ -1284,11 +1696,19 @@ function goFindTailors(){
 
 function renderNearbyTailors(){
   const title = document.getElementById('nearby-title');
-  if (title) title.textContent = (selectedService || 'All Services') + ' — Nearby Tailors';
+  if (title){
+    title.textContent = selectedService === 'Custom Design'
+      ? ('Custom ' + (selectedType || 'Design') + ' — Choose a Tailor')
+      : ((selectedService || 'All Services') + ' — Nearby Tailors');
+  }
   const cardMap = {abc:'ABC Tailors', style:'Style Point Tailors', royal:'Royal Fit Tailors', perfect:'Perfect Stitch'};
   for (const key in cardMap){
     const priceEl = document.getElementById('price-' + key);
     if (!priceEl) continue;
+    if (selectedService === 'Custom Design'){
+      priceEl.textContent = 'Tailor will quote a price';
+      continue;
+    }
     const p = (tailorPricing[cardMap[key]] || {})[selectedService];
     priceEl.textContent = p ? ('₹' + p + ' onwards') : 'Ask tailor for price';
   }
@@ -1298,14 +1718,27 @@ function openTailorProfile(name){
   selectedTailorName = name;
   document.getElementById('tp-name').textContent = name;
 
+  const contact = tailorContacts[name] || {phone:'+91 90000 11122', address:'Address shared on booking'};
+  document.getElementById('tp-address-line').textContent = contact.address;
+  document.getElementById('tp-phone-line').textContent = contact.phone;
+
   const prices = tailorPricing[name] || {};
-  document.getElementById('tp-price-table').innerHTML = Object.keys(prices).map(svc =>
-    '<div class="price-row"><span>' + svc.replace(' Stitching','') + '</span><span>₹' + prices[svc] + '+</span></div>'
-  ).join('') || '<div class="price-row"><span>Pricing shared on visit</span><span>—</span></div>';
+  const catalogPricing = document.getElementById('tp-catalog-pricing');
+  if (selectedService === 'Custom Design'){
+    catalogPricing.style.display = 'none';
+  } else {
+    catalogPricing.style.display = 'block';
+    document.getElementById('tp-price-table').innerHTML = Object.keys(prices).map(svc =>
+      '<div class="price-row"><span>' + svc.replace(' Stitching','') + '</span><span>₹' + prices[svc] + '+</span></div>'
+    ).join('') || '<div class="price-row"><span>Pricing shared on visit</span><span>—</span></div>';
+  }
 
   const banner = document.getElementById('tp-selected-service-banner');
   const p = selectedService ? prices[selectedService] : null;
-  if (selectedService && p){
+  if (selectedService === 'Custom Design'){
+    banner.style.display = 'block';
+    banner.innerHTML = '<i class="fas fa-palette"></i>&nbsp; Sending your custom ' + (selectedType || 'design') + ' request to ' + name + ' — they will review your photos and send a quote.';
+  } else if (selectedService && p){
     banner.style.display = 'block';
     banner.innerHTML = '<i class="fas fa-tag"></i>&nbsp; ' + selectedService + ' at ' + name + ': ₹' + p + ' onwards';
   } else if (selectedService){
@@ -1314,13 +1747,32 @@ function openTailorProfile(name){
   } else {
     banner.style.display = 'none';
   }
+
+  const tReviews = tailorReviews[name] || tailorReviews['ABC Tailors'];
+  document.getElementById('tp-review-count').textContent = tReviews.length;
+  document.getElementById('tp-review-preview').innerHTML = renderReviewCards(tReviews.slice(0,1));
+
+  const bookBtn = document.getElementById('tp-book-btn');
+  if (bookBtn) bookBtn.textContent = selectedService === 'Custom Design' ? 'Send Request to This Tailor' : 'Book Appointment';
+
   showScreen('tailor-profile');
+}
+
+function handleBookClick(){
+  if (selectedService === 'Custom Design'){
+    finalizeCustomOrder();
+  } else {
+    openBookAppointment();
+  }
 }
 
 function openBookAppointment(){
   const service = selectedService || 'Shirt Stitching';
   document.getElementById('ba-service').value = service;
   document.getElementById('ba-tailor-name').textContent = selectedTailorName;
+  document.getElementById('ba-meas-summary').textContent = orderMeasurementsCount > 0 ? (orderMeasurementsCount + ' fields recorded for ' + (selectedProfileName || 'you')) : 'Will be taken by the tailor when you visit';
+  document.getElementById('ba-photo-summary').textContent = orderPhotoCount > 0 ? (orderPhotoCount + ' photo(s) added') : 'Optional — add a design or fabric photo';
+  deliveryMode = 'Visit Shop';
   updateBookingPrice();
   showScreen('book-appointment');
 }
@@ -1338,21 +1790,482 @@ function updateBookingPrice(){
   }
 }
 
+/* ---------- slot availability ---------- */
+let bookedSlots = {
+  'ABC Tailors': ['2026-08-29|10:00','2026-08-29|11:30','2026-08-29|14:00'],
+  'Style Point Tailors': ['2026-08-29|12:00'],
+  'Royal Fit Tailors': [],
+  'Perfect Stitch': []
+};
+
+function isSlotTaken(tailor, date, time){
+  const list = bookedSlots[tailor] || [];
+  return list.indexOf(date + '|' + time) !== -1;
+}
+
+function checkSlotAvailability(){
+  const date = document.getElementById('ba-date').value;
+  const time = document.getElementById('ba-time').value;
+  const banner = document.getElementById('ba-slot-banner');
+  if (!date || !time){ banner.innerHTML = ''; return; }
+  if (isSlotTaken(selectedTailorName, date, time)){
+    banner.innerHTML = '<div class="banner banner-warn"><i class="fas fa-triangle-exclamation"></i><span>' + selectedTailorName + ' already has a booking at this time. Pick another slot, or continue and the shop will confirm a nearby time.</span></div>';
+  } else {
+    banner.innerHTML = '<div class="banner banner-info"><i class="fas fa-circle-check"></i><span>This slot is open at ' + selectedTailorName + '.</span></div>';
+  }
+}
+
+function checkSlotAvailabilityGeneric(dateId, timeId, tailor, bannerId){
+  const date = document.getElementById(dateId).value;
+  const time = document.getElementById(timeId).value;
+  const banner = document.getElementById(bannerId);
+  if (!date || !time){ banner.innerHTML=''; return; }
+  if (isSlotTaken(tailor, date, time)){
+    banner.innerHTML = '<div class="banner banner-warn"><i class="fas fa-triangle-exclamation"></i><span>' + tailor + ' already has a booking at this time.</span></div>';
+  } else {
+    banner.innerHTML = '<div class="banner banner-info"><i class="fas fa-circle-check"></i><span>This slot is open.</span></div>';
+  }
+}
+
+/* ---------- payment ---------- */
+function pickPay(el, method){
+  el.parentElement.querySelectorAll('.pay-row').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPayMethod = method;
+  const cta = document.getElementById('pay-cta');
+  const total = document.getElementById('pay-line-total').textContent;
+  cta.textContent = method === 'Cash' ? ('Confirm — Pay ' + total + ' on visit') : ('Pay ' + total + ' & Confirm');
+}
+
+function openPaymentSelect(){
+  const service = document.getElementById('ba-service').value;
+  const prices = tailorPricing[selectedTailorName] || {};
+  const unit = prices[service] || 0;
+  const stitchTotal = unit * qty2;
+  const deliveryFee = deliveryMode === 'Pickup & Delivery' ? 49 : 0;
+  document.getElementById('pay-line-stitch').textContent = unit ? ('₹' + stitchTotal) : 'Shared by tailor';
+  document.getElementById('pay-line-delivery-row').style.display = deliveryFee ? 'flex' : 'none';
+  document.getElementById('pay-line-total').textContent = unit ? ('₹' + (stitchTotal + deliveryFee)) : 'Pay on visit';
+  document.getElementById('pay-cta').textContent = unit ? ('Pay ₹' + (stitchTotal + deliveryFee) + ' & Confirm') : 'Confirm Booking';
+  showScreen('payment-select');
+}
+
+/* wrap the Continue to Payment button target */
+document.addEventListener('DOMContentLoaded', function(){});
+
 function confirmBookingFlow(){
   const service = document.getElementById('ba-service').value;
-  const date = document.getElementById('ba-date').value || '29 Aug';
+  const date = document.getElementById('ba-date').value || '2026-08-29';
   const time = document.getElementById('ba-time').value || '11:00';
+  const dateDisplay = formatDateDisplay(date);
+
+  const id = 'TW' + (10020 + bookingCounter++);
+  currentBookingId = id;
+  bdTailorName = selectedTailorName;
+
+  const totalText = document.getElementById('pay-line-total').textContent;
+
+  bookings[id] = {
+    id: id, customer:'Priya Sharma', tailor: selectedTailorName, service: service, type: selectedType,
+    qty: qty2, date: dateDisplay, delivery: deliveryMode, price: totalText, pay: selectedPayMethod,
+    status: 'Pending Approval', measurements: orderMeasurementsCount, photos: orderPhotoCount
+  };
+
+  bookedSlots[selectedTailorName] = bookedSlots[selectedTailorName] || [];
+  bookedSlots[selectedTailorName].push(date + '|' + time);
+
+  newRequests.push({id:id, service: service + ' × ' + qty2, customer:'Priya Sharma', tailor: selectedTailorName});
+  renderAdminRequests();
+
+  document.getElementById('bc-id').textContent = id;
   document.getElementById('bc-summary-service').textContent = service + ' × ' + qty2;
-  document.getElementById('bc-summary-datetime').textContent = date + ', ' + time;
+  document.getElementById('bc-summary-datetime').textContent = dateDisplay + ', ' + time;
   document.getElementById('bc-summary-shop').textContent = selectedTailorName;
   document.getElementById('bc-summary-shop2').textContent = selectedTailorName;
-  document.getElementById('bc-summary-price').textContent = document.getElementById('ba-price-estimate').textContent;
+  document.getElementById('bc-summary-pay').textContent = selectedPayMethod;
+  document.getElementById('bc-summary-price').textContent = totalText;
+
+  pushNotification('fa-hourglass-half', 'Booking #' + id + ' sent for approval', selectedTailorName + ' · just now');
+  sendWhatsApp('Your booking #' + id + ' with ' + selectedTailorName + ' was sent to Tailor Wala for approval.');
   showScreen('booking-confirmed');
 }
 
+function formatDateDisplay(iso){
+  if (!iso) return '29 Aug 2026';
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'});
+}
+
+let bookingCounter = 1;
+let bookings = {
+  'TW10021': {id:'TW10021', customer:'Priya Sharma', tailor:'ABC Tailors', service:'Shirt Stitching', type:'Formal Shirt', qty:2, date:'29 Aug 2026', delivery:'Visit Shop', price:'₹700', pay:'UPI', status:'Accepted', measurements:0, photos:0},
+  'TW10009': {id:'TW10009', customer:'Priya Sharma', tailor:'Royal Fit Tailors', service:'Blouse Stitching', type:'Sleeveless', qty:1, date:'12 Aug 2026', delivery:'Visit Shop', price:'₹250', pay:'Cash', status:'Completed', measurements:8, photos:0},
+  'TW09988': {id:'TW09988', customer:'Priya Sharma', tailor:'Style Point Tailors', service:'Alterations', type:'Hemming', qty:1, date:'2 Aug 2026', delivery:'Visit Shop', price:'₹100', pay:'UPI', status:'Cancelled', measurements:0, photos:0}
+};
+
+const statusPipeline = ['Pending','Accepted','Customer Visited','Measurement Taken','Stitching','Ready','Completed'];
+
+function renderMyBookings(){
+  const container = document.getElementById('my-bookings-list');
+  if (!container) return;
+  const pillClass = s => s === 'Completed' ? 'pill-leaf' : (s === 'Cancelled' ? 'pill-red' : ((s === 'Awaiting Quote' || s === 'Pending Approval') ? 'pill-sand' : (s === 'Quote Sent' ? 'pill-marigold' : 'pill-sky')));
+  container.innerHTML = Object.values(bookings).reverse().map(b =>
+    '<div class="card" onclick="openBookingDetail(\'' + b.id + '\')" style="cursor:pointer;">' +
+      '<div class="tailor-top">' +
+        '<div><div class="tailor-name">' + b.tailor + '</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">' + b.service + ' × ' + b.qty + ' · #' + b.id + '</div></div>' +
+        '<span class="pill ' + pillClass(b.status) + '">' + b.status + '</span>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+}
+
+function openBookingDetail(id){
+  currentBookingId = id;
+  const b = bookings[id];
+  if (!b) return;
+  bdTailorName = b.tailor;
+  document.getElementById('bd-title').textContent = 'Booking #' + b.id;
+  document.getElementById('bd-sub').textContent = b.tailor + ' · ' + b.service + ' × ' + b.qty;
+  document.getElementById('bd-date').textContent = b.date;
+  document.getElementById('bd-qty').textContent = b.qty;
+  document.getElementById('bd-delivery').textContent = b.delivery;
+  document.getElementById('bd-price').textContent = b.price;
+  document.getElementById('bd-tailor-name').textContent = b.tailor;
+  document.getElementById('bd-tailor-phone').textContent = (tailorContacts[b.tailor] || {}).phone || 'Shared once accepted';
+  if (b.status === 'Pending Approval'){
+    document.getElementById('bd-timeline').innerHTML = '<div class="t-item current"><div class="t-dot"><i class="fas fa-hourglass-half"></i></div><div><div class="t-label">Pending Approval</div><div class="t-sub">Tailor Wala admin is reviewing this booking with ' + b.tailor + '</div></div></div>';
+  } else if (b.status === 'Awaiting Quote'){
+    document.getElementById('bd-timeline').innerHTML = '<div class="t-item current"><div class="t-dot"><i class="fas fa-hourglass-half"></i></div><div><div class="t-label">Awaiting Quote</div><div class="t-sub">' + b.tailor + ' is reviewing your photos and will send a price soon</div></div></div>';
+  } else if (b.status === 'Quote Sent'){
+    document.getElementById('bd-timeline').innerHTML = '<div class="t-item current"><div class="t-dot"><i class="fas fa-indian-rupee-sign"></i></div><div><div class="t-label">Quote Received</div><div class="t-sub">' + b.tailor + ' quoted ' + b.price + ' — accept to confirm your order</div></div></div>';
+  } else {
+    document.getElementById('bd-timeline').innerHTML = renderTimeline(b.status);
+  }
+
+  document.getElementById('bd-review-btn').style.display = b.status === 'Completed' ? 'block' : 'none';
+
+  const quoteActions = document.getElementById('bd-quote-actions');
+  if (b.status === 'Quote Sent'){
+    quoteActions.style.display = 'block';
+    document.getElementById('bd-quote-price').textContent = b.price;
+  } else {
+    quoteActions.style.display = 'none';
+  }
+
+  document.getElementById('bd-cancel-btn').style.display = (b.status === 'Completed' || b.status === 'Cancelled' || b.status === 'Quote Sent') ? 'none' : 'block';
+  showScreen('booking-detail');
+}
+
+function acceptQuote(){
+  const b = bookings[currentBookingId];
+  if (!b) return;
+  b.status = 'Accepted';
+  pushNotification('fa-check', 'You accepted the quote from ' + b.tailor, 'Booking #' + b.id + ' is now confirmed');
+  sendWhatsApp('You accepted ' + b.tailor + "'s quote of " + b.price + '. Your order #' + b.id + ' is confirmed.');
+  alert('Quote accepted! Your order is now confirmed.');
+  renderMyBookings();
+  openBookingDetail(b.id);
+}
+
+function declineQuote(){
+  const b = bookings[currentBookingId];
+  if (!b) return;
+  if (!confirm('Decline this quote and cancel the request?')) return;
+  b.status = 'Cancelled';
+  pushNotification('fa-xmark', 'You declined the quote from ' + b.tailor, 'Booking #' + b.id);
+  sendWhatsApp('You declined ' + b.tailor + "'s quote for booking #" + b.id + '.');
+  alert('Quote declined.');
+  renderMyBookings();
+  openBookingDetail(b.id);
+}
+
+function renderTimeline(currentStatus){
+  const idx = statusPipeline.indexOf(currentStatus);
+  const subs = {
+    'Pending':'Booking placed', 'Accepted':'Tailor confirmed your slot', 'Customer Visited':'Awaiting your visit',
+    'Measurement Taken':'Measurements recorded', 'Stitching':'Your order is being stitched', 'Ready':'Ready for pickup', 'Completed':'Order completed'
+  };
+  return statusPipeline.map((step, i) => {
+    const cls = currentStatus === 'Cancelled' ? '' : (i < idx ? 'done' : (i === idx ? 'current' : ''));
+    const sub = i < idx ? 'Completed' : (i === idx ? subs[step] : 'Pending');
+    const icon = (i < idx || i === idx) ? '<i class="fas fa-check"></i>' : '';
+    return '<div class="t-item ' + cls + '"><div class="t-dot">' + icon + '</div><div><div class="t-label">' + step + '</div><div class="t-sub">' + sub + '</div></div></div>';
+  }).join('');
+}
+
+function cancelBooking(id){
+  if (!confirm('Cancel this booking?')) return;
+  if (bookings[id]) bookings[id].status = 'Cancelled';
+  pushNotification('fa-ban', 'Booking #' + id + ' cancelled', 'Just now');
+  alert('Booking cancelled.');
+  renderMyBookings();
+  showScreen('my-bookings');
+}
+
+/* ---------- notifications ---------- */
+let notifications = [
+  {icon:'fa-check', title:'ABC Tailors accepted your booking', sub:'#TW10021 · 20 min ago'},
+  {icon:'fa-star', title:'Rate your recent visit', sub:'Royal Fit Tailors · Yesterday'}
+];
+
+function pushNotification(icon, title, sub){
+  notifications.unshift({icon, title, sub});
+  renderNotifications();
+}
+
+function renderNotifications(){
+  const container = document.getElementById('customer-notifications-list');
+  if (!container) return;
+  container.innerHTML = notifications.map(n =>
+    '<div class="list-row"><div class="icon-box"><i class="fas ' + n.icon + '"></i></div><div><div class="row-title">' + n.title + '</div><div class="row-sub">' + n.sub + '</div></div></div>'
+  ).join('') || '<p style="text-align:center;color:var(--gray);font-size:12.5px;padding:30px 16px;">Nothing new right now.</p>';
+}
+
+/* ---------- reviews ---------- */
+let tailorReviews = {
+  'ABC Tailors': [
+    {name:'Ravi Kumar', date:'3 days ago', stars:5, text:'Great fit on my formal shirts, and they were ready a day early.'},
+    {name:'Anjali Rao', date:'1 week ago', stars:5, text:'Very polite staff, took time to understand the fit I wanted.'},
+    {name:'Meera Patel', date:'2 weeks ago', stars:4, text:'Good work, slightly delayed by a day but quality was worth it.'}
+  ],
+  'Style Point Tailors': [{name:'Kiran Das', date:'5 days ago', stars:4, text:'Solid alterations, quick turnaround.'}],
+  'Royal Fit Tailors': [{name:'Sneha Iyer', date:'2 days ago', stars:5, text:'Blouse fit perfectly on the first try.'}],
+  'Perfect Stitch': [{name:'Arjun Rao', date:'1 week ago', stars:4, text:'Good value, basic finish.'}]
+};
+
+function starsStr(n){ return '★'.repeat(n) + '☆'.repeat(5-n); }
+
+function renderReviewCards(list){
+  const avatarColors = ['','style="background:var(--leaf-bg);color:var(--leaf);"','style="background:var(--sand);color:var(--sand-text);"'];
+  return list.map((r,i) =>
+    '<div class="review-card">' +
+      '<div class="review-top"><div class="review-avatar" ' + (avatarColors[i%3]) + '>' + r.name.charAt(0) + '</div><div><div class="review-name">' + r.name + '</div><div class="review-date">' + r.date + ' · ' + starsStr(r.stars) + '</div></div></div>' +
+      '<div class="review-text">' + r.text + '</div>' +
+    '</div>'
+  ).join('');
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  const revScreen = document.getElementById('reviews');
+});
+
+let reviewDraftStars = 5;
+let reviewTargetBookingId = null;
+
+function openLeaveReview(bookingId){
+  reviewTargetBookingId = bookingId;
+  const b = bookings[bookingId];
+  document.getElementById('lr-sub').textContent = b.tailor + ' · ' + b.service;
+  document.getElementById('lr-text').value = '';
+  setReviewStars(5);
+  showScreen('leave-review');
+}
+
+function setReviewStars(n){
+  reviewDraftStars = n;
+  document.querySelectorAll('#lr-stars i').forEach(s => {
+    s.classList.toggle('on', parseInt(s.dataset.v) <= n);
+  });
+}
+
+function submitReview(){
+  const b = bookings[reviewTargetBookingId];
+  if (!b) return;
+  const text = document.getElementById('lr-text').value.trim() || 'Good experience overall.';
+  const list = tailorReviews[b.tailor] || (tailorReviews[b.tailor] = []);
+  list.unshift({name:'Priya Sharma', date:'Just now', stars: reviewDraftStars, text: text});
+  pushNotification('fa-star', 'Thanks for rating ' + b.tailor, 'Just now');
+  alert('Review submitted!');
+  showScreen('booking-detail');
+}
+
+/* ---------- measurement profiles (customer, multi-person) ---------- */
+let measurementProfiles = [
+  {name:'Priya Sharma (You)', fields:24},
+  {name:'Amit Sharma (Spouse)', fields:0}
+];
+let selectedProfileName = null;
+let profileReturnTo = 'service-detail';
+
+function openMeasurementProfilePickCustomer(){
+  renderProfilePickList();
+  showScreen('measurement-profile-pick');
+}
+
+function renderProfilePickList(){
+  const container = document.getElementById('profile-pick-list');
+  container.innerHTML = measurementProfiles.map((p,i) =>
+    '<div class="pick-row" onclick="chooseProfile(' + i + ')"><div><div class="row-title">' + p.name + '</div><div class="row-sub">' + (p.fields ? (p.fields + ' fields saved') : 'No measurements yet') + '</div></div><div class="check"><i class="fas fa-check"></i></div></div>'
+  ).join('');
+}
+
+function chooseProfile(i){
+  selectedProfileName = measurementProfiles[i].name;
+  measureReturnTo = profileReturnTo;
+  document.getElementById('am-sub').textContent = 'For ' + selectedProfileName;
+  showScreen('add-measurements');
+}
+
+function openNewProfile(){
+  document.getElementById('np-name').value = '';
+  showScreen('new-profile');
+}
+
+function saveNewProfile(){
+  const name = document.getElementById('np-name').value.trim();
+  if (!name){ alert('Please name this profile.'); return; }
+  measurementProfiles.push({name: name, fields: 0});
+  selectedProfileName = name;
+  measureReturnTo = profileReturnTo;
+  document.getElementById('am-sub').textContent = 'For ' + name;
+  showScreen('add-measurements');
+}
+
+/* ---------- reference photo (shared) ---------- */
+let referencePhotoCounts = {'service-detail':0, 'book-appointment':0, 'tailor-new-order':0, 'admin-new-order':0};
+let photoReturnTo = 'service-detail';
+let orderPhotoCount = 0;
+let photoSlots = [1,2,3];
+
+function openReferencePhoto(returnTo){
+  photoReturnTo = returnTo;
+  renderPhotoGrid();
+  showScreen('reference-photo');
+}
+
+function renderPhotoGrid(){
+  const grid = document.getElementById('photo-upload-grid');
+  const count = referencePhotoCounts[photoReturnTo] || 0;
+  grid.innerHTML = photoSlots.map(i =>
+    '<div class="upload-tile' + (i <= count ? ' filled' : '') + '" onclick="togglePhotoSlot(' + i + ')"><i class="fas ' + (i <= count ? 'fa-image' : 'fa-camera') + '"></i><span>' + (i <= count ? 'Added' : 'Add Photo') + '</span></div>'
+  ).join('');
+}
+
+function togglePhotoSlot(i){
+  const current = referencePhotoCounts[photoReturnTo] || 0;
+  referencePhotoCounts[photoReturnTo] = (i <= current) ? i - 1 : i;
+  renderPhotoGrid();
+}
+
+function savePhotos(){
+  const count = referencePhotoCounts[photoReturnTo] || 0;
+  orderPhotoCount = count;
+  const summaryText = count > 0 ? (count + ' photo(s) added') : 'Not added yet';
+  const sdEl = document.getElementById('sd-photo-summary');
+  const baEl = document.getElementById('ba-photo-summary');
+  const tnoEl = document.getElementById('tno-photo-summary');
+  const anoEl = document.getElementById('ano-photo-summary');
+  if (sdEl && photoReturnTo === 'service-detail') sdEl.textContent = summaryText;
+  if (baEl) baEl.textContent = summaryText;
+  if (tnoEl) tnoEl.textContent = summaryText;
+  if (anoEl) anoEl.textContent = summaryText;
+  showScreen(photoReturnTo);
+}
+
+/* ---------- custom design ("Others") order request ---------- */
+function renderCustomPhotoGrid(){
+  const grid = document.getElementById('custom-photo-grid');
+  grid.innerHTML = [1,2,3].map(i =>
+    '<div class="upload-tile' + (i <= customPhotoCount ? ' filled' : '') + '" onclick="toggleCustomPhoto(' + i + ')"><i class="fas ' + (i <= customPhotoCount ? 'fa-image' : 'fa-camera') + '"></i><span>' + (i <= customPhotoCount ? 'Added' : 'Add Photo') + '</span></div>'
+  ).join('');
+}
+
+function toggleCustomPhoto(i){
+  customPhotoCount = (i <= customPhotoCount) ? i - 1 : i;
+  renderCustomPhotoGrid();
+}
+
+/* Called once the customer has picked a tailor shop on the nearby-tailors / tailor-profile
+   screens (selectedTailorName). Uses the type/photos/description captured earlier. */
+function finalizeCustomOrder(){
+  const id = 'TW' + (10020 + bookingCounter++);
+  currentBookingId = id;
+  bdTailorName = selectedTailorName;
+
+  bookings[id] = {
+    id:id, customer:'Priya Sharma', tailor:selectedTailorName, service:'Custom Design', type: selectedType || 'Custom',
+    qty:1, date: customDateStore ? formatDateDisplay(customDateStore) : 'Flexible', delivery:'Visit Shop', price:'Awaiting quote',
+    pay:'—', status:'Awaiting Quote', measurements:0, photos: customPhotoCount, customDesc: customDescStore
+  };
+
+  customRequests.push({bookingId:id, tailor:selectedTailorName, customer:'Priya Sharma', desc:customDescStore, photos:customPhotoCount, type: selectedType});
+  renderAdminRequests();
+
+  document.getElementById('cos-sub').textContent = 'Sent for review — Tailor Wala admin will check it with ' + selectedTailorName + ' and send you a price quote soon.';
+  pushNotification('fa-palette', 'Custom design request sent for admin review', 'For ' + selectedTailorName + ' · just now');
+  sendWhatsApp('Your custom design request was sent to Tailor Wala for review with ' + selectedTailorName + '.');
+  showScreen('custom-order-sent');
+}
+
+/* ---------- chat ---------- */
+let chatReturnTo = 'tailor-profile';
+let chatThreads = {};
+
+function openChat(actor, otherName){
+  chatReturnTo = actor === 'tailor' ? 'tailor-booking-detail' : (document.getElementById('booking-detail').classList.contains('active') ? 'booking-detail' : 'tailor-profile');
+  document.getElementById('chat-title').textContent = otherName;
+  const key = otherName;
+  if (!chatThreads[key]){
+    chatThreads[key] = actor === 'tailor'
+      ? [{from:'in', text:'Hi! Just confirming — French cuffs on the formal shirt, correct?', time:'10:02 AM'}]
+      : [{from:'in', text:'Hello! Happy to help — what would you like to know?', time:'10:00 AM'}];
+  }
+  chatCurrentActor = actor;
+  renderChat();
+  showScreen('chat-thread');
+}
+
+let chatCurrentActor = 'customer';
+
+function renderChat(){
+  const key = document.getElementById('chat-title').textContent;
+  const body = document.getElementById('chat-body');
+  const msgs = chatThreads[key] || [];
+  body.innerHTML = msgs.map(m =>
+    '<div class="msg ' + (m.from === 'out' ? 'out' : 'in') + '">' + m.text + '<div class="msg-time">' + m.time + '</div></div>'
+  ).join('');
+  body.scrollTop = body.scrollHeight;
+}
+
+function sendChatMessage(){
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const key = document.getElementById('chat-title').textContent;
+  const now = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
+  chatThreads[key] = chatThreads[key] || [];
+  chatThreads[key].push({from:'out', text: text, time: now});
+  input.value = '';
+  renderChat();
+  setTimeout(() => {
+    chatThreads[key].push({from:'in', text: 'Got it, thank you for letting us know!', time: new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'})});
+    renderChat();
+  }, 900);
+}
+
+/* ---------- invoice ---------- */
+let invoiceReturnTo = 'booking-detail';
+
+function openInvoice(bookingId){
+  invoiceReturnTo = document.getElementById('booking-confirmed').classList.contains('active') ? 'booking-confirmed' : 'booking-detail';
+  const b = bookings[bookingId];
+  if (!b) return;
+  document.getElementById('inv-id').textContent = '#INV-' + b.id;
+  document.getElementById('inv-customer').textContent = b.customer;
+  document.getElementById('inv-tailor').textContent = b.tailor;
+  document.getElementById('inv-date').textContent = b.date;
+  document.getElementById('inv-service-line').textContent = b.service + ' (' + b.type + ') × ' + b.qty;
+  document.getElementById('inv-service-price').textContent = b.price;
+  document.getElementById('inv-delivery-line').style.display = b.delivery === 'Pickup & Delivery' ? 'flex' : 'none';
+  document.getElementById('inv-total').textContent = b.price;
+  document.getElementById('inv-pay').textContent = b.pay;
+  document.getElementById('inv-status').textContent = b.pay === 'Cash' ? 'Pay on visit' : 'Paid';
+  document.getElementById('inv-status').style.color = b.pay === 'Cash' ? 'var(--sand-text)' : 'var(--leaf)';
+  showScreen('invoice-screen');
+}
 
 /* ---------- shared order-creation flow: tailor creates for a customer, admin creates & assigns ---------- */
-let orderActor = 'tailor';           // 'tailor' or 'admin'
+let orderActor = 'tailor';
 let orderCustomerName = 'Search or select a customer';
 let orderMeasurementsCount = 0;
 let orderAssignedTailor = null;
@@ -1363,10 +2276,13 @@ function resetOrderForm(actor){
   const prefix = actor === 'admin' ? 'ano' : 'tno';
   const custEl = document.getElementById(prefix + '-customer-summary');
   const measEl = document.getElementById(prefix + '-meas-summary');
+  const photoEl = document.getElementById(prefix + '-photo-summary');
   if (custEl) custEl.textContent = 'Search or select a customer';
   if (measEl) measEl.textContent = 'Not added yet';
+  if (photoEl) photoEl.textContent = 'Not added yet';
   const assignEl = document.getElementById('ano-assign-summary');
   if (actor === 'admin' && assignEl) assignEl.textContent = 'Not assigned yet';
+  referencePhotoCounts[prefix + '-new-order'] = 0;
 }
 
 function openSelectCustomer(returnTo){
@@ -1396,6 +2312,7 @@ function updateCustomerSummary(){
 
 function openMeasurements(returnTo){
   measureReturnTo = returnTo;
+  document.getElementById('am-sub').textContent = 'Recorded once, reused for this order';
   showScreen('add-measurements');
 }
 
@@ -1415,11 +2332,17 @@ function fillDemoMeasurements(){
 function saveMeasurementsShared(){
   const filled = Array.from(document.querySelectorAll('#add-measurements .meas-input')).filter(i => i.value).length;
   orderMeasurementsCount = filled;
+  if (selectedProfileName){
+    const p = measurementProfiles.find(x => x.name === selectedProfileName);
+    if (p) p.fields = filled;
+  }
   const tnoEl = document.getElementById('tno-meas-summary');
   const anoEl = document.getElementById('ano-meas-summary');
-  const summary = filled + ' fields recorded';
+  const baEl = document.getElementById('ba-meas-summary');
+  const summary = filled + ' fields recorded' + (selectedProfileName ? (' for ' + selectedProfileName) : '');
   if (tnoEl) tnoEl.textContent = summary;
   if (anoEl) anoEl.textContent = summary;
+  if (baEl) baEl.textContent = summary;
   showScreen(measureReturnTo);
 }
 
@@ -1446,7 +2369,10 @@ function goReview(actor){
   document.getElementById('rev-customer').textContent = orderCustomerName;
   document.getElementById('rev-service').textContent = service + ' × ' + qty;
   document.getElementById('rev-datetime').textContent = date + ' · ' + time;
+  document.getElementById('rev-delivery').textContent = deliveryMode;
   document.getElementById('rev-measurements').textContent = orderMeasurementsCount > 0 ? (orderMeasurementsCount + ' fields recorded') : 'Not added';
+  const photoCount = referencePhotoCounts[prefix + '-new-order'] || 0;
+  document.getElementById('rev-photo').textContent = photoCount > 0 ? (photoCount + ' photo(s) added') : 'Not added';
 
   const assignRow = document.getElementById('rev-assign-row');
   if (actor === 'admin'){
@@ -1465,9 +2391,16 @@ function confirmCreateOrder(){
   const isAdmin = orderActor === 'admin';
   const assignedTo = isAdmin ? (orderAssignedTailor || 'ABC Tailors') : 'ABC Tailors';
 
+  const id = 'TW' + (10020 + bookingCounter++);
+  bookings[id] = {
+    id: id, customer: customer, tailor: assignedTo, service: serviceQty.split(' × ')[0], type:'Standard',
+    qty: parseInt(serviceQty.split(' × ')[1]) || 1, date: datetime.split(' · ')[0], delivery: deliveryMode,
+    price: '—', pay:'Cash', status:'Accepted', measurements: orderMeasurementsCount, photos: 0
+  };
+
   const card = document.createElement('div');
   card.className = 'list-row';
-  card.onclick = function(){ showScreen('tailor-booking-detail'); };
+  card.onclick = function(){ openTailorBookingDetail(id); };
   card.innerHTML =
     '<div class="icon-box"><i class="fas fa-user"></i></div>' +
     '<div><div class="row-title">' + customer + '</div>' +
@@ -1477,6 +2410,8 @@ function confirmCreateOrder(){
   const container = document.getElementById('tailor-dash-bookings-list');
   if (container) container.prepend(card);
 
+  pushNotification('fa-plus', 'New order created for ' + customer, 'Just now');
+  sendWhatsApp('Order for ' + customer + ' created and assigned to ' + assignedTo + '.');
   alert(isAdmin ? ('Order created and assigned to ' + assignedTo + '. It now appears in their dashboard.') : 'Order created! It has been added to today\'s bookings.');
 
   orderCustomerName = 'Search or select a customer';
@@ -1486,11 +2421,84 @@ function confirmCreateOrder(){
   showScreen(isAdmin ? 'admin-dashboard' : 'tailor-dash');
 }
 
+function openTailorBookingDetail(id){
+  const b = bookings[id];
+  if (!b){ showScreen('tailor-booking-detail'); return; }
+  document.getElementById('tbd-name').textContent = b.customer;
+  document.getElementById('tbd-sub').textContent = b.service + ' × ' + b.qty + ' · #' + b.id;
+  document.getElementById('tbd-time').textContent = b.date;
+  document.getElementById('tbd-status-select').value = b.status;
+  currentBookingId = id;
+  showScreen('tailor-booking-detail');
+}
+
+function updateTailorStatus(){
+  const newStatus = document.getElementById('tbd-status-select').value;
+  const b = bookings[currentBookingId];
+  if (b) b.status = newStatus;
+  pushNotification('fa-arrows-rotate', 'Order #' + currentBookingId + ' updated to "' + newStatus + '"', 'Just now');
+  sendWhatsApp('Order #' + currentBookingId + ' status updated to "' + newStatus + '".');
+  alert('Status updated! The customer has been notified.');
+}
+
+/* ---------- tailor onboarding & document verification ---------- */
+let tailorDocs = {
+  'ABC Tailors': {'doc-shop-photo':true, 'doc-id-proof':true, 'doc-address-proof':true, status:'verified'},
+  'Style Point Tailors': {'doc-shop-photo':true, 'doc-id-proof':true, 'doc-address-proof':true, status:'verified'},
+  'Royal Fit Tailors': {'doc-shop-photo':true, 'doc-id-proof':true, 'doc-address-proof':true, status:'verified'},
+  'New Look Tailors': {'doc-shop-photo':false, 'doc-id-proof':false, 'doc-address-proof':false, status:'pending'}
+};
+let docReturnTo = 'tailor-profile-setup';
+let currentDocTailor = 'ABC Tailors';
+
+function openTailorDocuments(name){
+  currentDocTailor = name;
+  const d = tailorDocs[name] || (tailorDocs[name] = {'doc-shop-photo':false,'doc-id-proof':false,'doc-address-proof':false,status:'pending'});
+  ['doc-shop-photo','doc-id-proof','doc-address-proof'].forEach(id => {
+    const row = document.getElementById(id);
+    row.classList.toggle('filled', !!d[id]);
+    row.querySelector('.upload-btn').textContent = d[id] ? 'Uploaded' : 'Upload';
+  });
+  const badge = document.getElementById('td-status-badge');
+  badge.className = 'doc-badge ' + (d.status === 'verified' ? 'verified' : (d.status === 'blocked' ? 'blocked' : 'pending'));
+  badge.innerHTML = '<i class="fas fa-badge-check"></i>' + (d.status === 'verified' ? 'Verified' : (d.status === 'blocked' ? 'Blocked' : 'Pending Review'));
+  showScreen('tailor-documents');
+}
+
+function uploadDoc(rowId){
+  const d = tailorDocs[currentDocTailor];
+  d[rowId] = true;
+  const row = document.getElementById(rowId);
+  row.classList.add('filled');
+  row.querySelector('.upload-btn').textContent = 'Uploaded';
+}
+
+function submitDocsForReview(){
+  const d = tailorDocs[currentDocTailor];
+  const allDone = d['doc-shop-photo'] && d['doc-id-proof'] && d['doc-address-proof'];
+  if (!allDone){ alert('Please upload all three documents before submitting.'); return; }
+  d.status = 'pending';
+  alert('Documents submitted! Admin will review within 24 hours.');
+  renderTailorDocBanner();
+  showScreen(docReturnTo);
+}
+
+function renderTailorDocBanner(){
+  const banner = document.getElementById('tailor-doc-banner');
+  if (!banner) return;
+  const d = tailorDocs['ABC Tailors'];
+  if (d.status !== 'verified'){
+    banner.innerHTML = '<div class="banner banner-warn"><i class="fas fa-triangle-exclamation"></i><span>Your documents are pending review. New bookings pause until verification completes.</span></div>';
+  } else {
+    banner.innerHTML = '';
+  }
+}
+
 /* ---------- admin: tailor directory (list, add/onboard, approve/block) ---------- */
 let adminTailorsList = [
-  {name:'ABC Tailors', area:'Banjara Hills', rating:'4.7', verified:true},
-  {name:'Style Point Tailors', area:'Jubilee Hills', rating:'4.5', verified:true},
-  {name:'New Look Tailors', area:'Kondapur', rating:'—', verified:false}
+  {name:'ABC Tailors', area:'Banjara Hills', rating:'4.7', verified:true, owner:'Ashok Reddy', branches:[]},
+  {name:'Style Point Tailors', area:'Jubilee Hills', rating:'4.5', verified:true, owner:'Farhan Ali', branches:[]},
+  {name:'New Look Tailors', area:'Kondapur', rating:'—', verified:false, owner:'Lakshmi Devi', branches:[]}
 ];
 let currentAdminTailorIndex = 0;
 
@@ -1514,12 +2522,55 @@ function openTailorDetailAdmin(i){
   const badge = document.getElementById('atd-badge');
   badge.className = 'doc-badge ' + (t.verified ? 'verified' : 'pending');
   badge.innerHTML = '<i class="fas fa-badge-check"></i>' + (t.verified ? 'Documents Verified' : 'Pending Verification');
+  document.getElementById('atd-owner').textContent = t.owner || '—';
+  document.getElementById('atd-phone').textContent = (tailorContacts[t.name] || {}).phone || '—';
+  renderBranchesList(t);
   showScreen('admin-tailor-detail');
+}
+
+function renderBranchesList(t){
+  const container = document.getElementById('atd-branches-list');
+  if (!container) return;
+  const branches = t.branches || [];
+  if (!branches.length){
+    container.innerHTML = '<p style="padding:0 16px;font-size:12.5px;color:var(--gray);">No additional branches yet — this shop runs as a single location.</p>';
+    return;
+  }
+  container.innerHTML = branches.map(b =>
+    '<div class="list-row" style="cursor:default;"><div class="icon-box"><i class="fas fa-store"></i></div><div><div class="row-title">' + b.name + '</div><div class="row-sub">' + b.address + (b.phone ? (' · ' + b.phone) : '') + '</div></div></div>'
+  ).join('');
+}
+
+function openAddBranch(){
+  const t = adminTailorsList[currentAdminTailorIndex];
+  document.getElementById('aab-sub').textContent = 'New branch under ' + t.name;
+  document.getElementById('aab-name').value = '';
+  document.getElementById('aab-address').value = '';
+  document.getElementById('aab-phone').value = '';
+  showScreen('admin-add-branch');
+}
+
+function saveNewBranch(){
+  const name = document.getElementById('aab-name').value.trim();
+  const address = document.getElementById('aab-address').value.trim();
+  const phone = document.getElementById('aab-phone').value.trim();
+  if (!name){ alert('Please name this branch.'); return; }
+  const t = adminTailorsList[currentAdminTailorIndex];
+  t.branches = t.branches || [];
+  t.branches.push({name: name, address: address || 'Address not added yet', phone: phone});
+  alert('Branch added to ' + t.name + '.');
+  openTailorDetailAdmin(currentAdminTailorIndex);
 }
 
 function toggleApproveTailor(){
   const t = adminTailorsList[currentAdminTailorIndex];
+  const d = tailorDocs[t.name];
+  if (d && !(d['doc-shop-photo'] && d['doc-id-proof'] && d['doc-address-proof'])){
+    alert(t.name + ' has not submitted all verification documents yet.');
+    return;
+  }
   t.verified = true;
+  if (d) d.status = 'verified';
   if (t.rating === '—') t.rating = '4.0';
   renderAdminTailors();
   alert(t.name + ' approved! They are now visible to customers searching nearby.');
@@ -1529,15 +2580,21 @@ function toggleApproveTailor(){
 function toggleBlockTailor(){
   const t = adminTailorsList[currentAdminTailorIndex];
   t.verified = false;
+  const d = tailorDocs[t.name];
+  if (d) d.status = 'blocked';
   renderAdminTailors();
   alert(t.name + ' has been blocked and is hidden from customer search.');
   openTailorDetailAdmin(currentAdminTailorIndex);
 }
 
 let newTailorCounter = 1;
-let tailorLoginDirectory = {}; // phone -> password, for the demo login flow
+let tailorLoginDirectory = {};
 
 function resetAddTailorForm(){
+  document.getElementById('at-shop-name').value = '';
+  document.getElementById('at-owner-name').value = '';
+  document.getElementById('at-area').value = '';
+  document.getElementById('at-address').value = '';
   document.getElementById('at-phone').value = '';
   document.getElementById('at-password').value = '';
   document.getElementById('at-password-confirm').value = '';
@@ -1550,19 +2607,28 @@ function generateTailorPassword(){
 }
 
 function saveNewTailor(){
+  const shopName = document.getElementById('at-shop-name').value.trim();
+  const ownerName = document.getElementById('at-owner-name').value.trim();
+  const area = document.getElementById('at-area').value.trim();
+  const address = document.getElementById('at-address').value.trim();
   const phone = document.getElementById('at-phone').value.trim();
   const password = document.getElementById('at-password').value.trim();
   const confirm = document.getElementById('at-password-confirm').value.trim();
 
+  if (!shopName){ alert('Please enter the shop name.'); return; }
   if (!phone){ alert('Please enter a phone number.'); return; }
   if (!password){ alert('Please set a password.'); return; }
   if (password !== confirm){ alert('Passwords do not match.'); return; }
 
   tailorLoginDirectory[phone] = password;
 
-  const placeholderName = 'New Partner (' + phone.slice(-4) + ')';
-  tailorPricing[placeholderName] = {};
-  adminTailorsList.push({name: placeholderName, area: 'Profile not set up yet', rating: '—', verified: false});
+  tailorPricing[shopName] = {};
+  tailorDocs[shopName] = {'doc-shop-photo':false, 'doc-id-proof':false, 'doc-address-proof':false, status:'pending'};
+  tailorContacts[shopName] = {phone: phone, address: address || 'Address not added yet'};
+  adminTailorsList.push({
+    name: shopName, area: area || 'Area not set', rating: '—', verified: false,
+    owner: ownerName || '—', branches: []
+  });
   renderAdminTailors();
 
   document.getElementById('tlc-phone').textContent = phone;
@@ -1570,11 +2636,178 @@ function saveNewTailor(){
   showScreen('tailor-login-created');
 }
 
+/* ---------- admin payouts / commission ---------- */
+const COMMISSION_RATE = 0.12;
+let payoutData = [
+  {tailor:'ABC Tailors', orders:38, collected:53200, paid:false},
+  {tailor:'Style Point Tailors', orders:24, collected:31800, paid:false},
+  {tailor:'Royal Fit Tailors', orders:19, collected:29600, paid:true},
+  {tailor:'Perfect Stitch', orders:14, collected:16400, paid:false}
+];
+
+function renderPayouts(){
+  const container = document.getElementById('admin-payouts-list');
+  if (!container) return;
+  container.innerHTML = payoutData.map((p, i) => {
+    const commission = Math.round(p.collected * COMMISSION_RATE);
+    const payout = p.collected - commission;
+    return '<div class="card">' +
+      '<div class="tailor-top"><div class="tailor-name">' + p.tailor + '</div><span class="pill ' + (p.paid ? 'pill-leaf' : 'pill-sand') + '">' + (p.paid ? 'Paid' : 'Pending') + '</span></div>' +
+      '<div class="price-row"><span>Orders this month</span><span>' + p.orders + '</span></div>' +
+      '<div class="price-row"><span>Collected</span><span>₹' + p.collected.toLocaleString('en-IN') + '</span></div>' +
+      '<div class="price-row"><span>Platform commission (12%)</span><span>₹' + commission.toLocaleString('en-IN') + '</span></div>' +
+      '<div class="price-row total"><span>Payout due</span><span>₹' + payout.toLocaleString('en-IN') + '</span></div>' +
+      (p.paid ? '' : '<div class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="markPayoutPaid(' + i + ')">Mark as Paid</div>') +
+    '</div>';
+  }).join('');
+}
+
+function markPayoutPaid(i){
+  payoutData[i].paid = true;
+  renderPayouts();
+  alert(payoutData[i].tailor + ' marked as paid.');
+}
+
+/* ---------- tailor dashboard dynamic lists ---------- */
+let newRequests = [
+  {id:'TW10021', service:'Shirt Stitching × 2', customer:'Kavya Reddy', tailor:'ABC Tailors'},
+  {id:'TW10022', service:'Blouse Stitching × 1', customer:'Sneha Iyer', tailor:'Royal Fit Tailors'}
+];
+
+let customRequests = [];
+
+function renderTailorDashLists(){
+  const bookingsList = document.getElementById('tailor-dash-bookings-list');
+  if (bookingsList){
+    bookingsList.innerHTML =
+      '<div class="list-row" onclick="openTailorBookingDetail(\'TW10021\')"><div class="icon-box">10</div><div><div class="row-title">Ravi Kumar</div><div class="row-sub">Shirt × 2 · 10:00 AM</div></div><span class="pill pill-sky">Accepted</span></div>' +
+      '<div class="list-row" onclick="openTailorBookingDetail(\'TW10021\')"><div class="icon-box">11</div><div><div class="row-title">Gopi Chand</div><div class="row-sub">Pant × 1 · 11:30 AM</div></div><span class="pill pill-sky">Accepted</span></div>' +
+      '<div class="list-row" onclick="openTailorBookingDetail(\'TW10021\')"><div class="icon-box">02</div><div><div class="row-title">Suresh Babu</div><div class="row-sub">Alteration · 2:00 PM</div></div><span class="pill pill-sky">Accepted</span></div>';
+  }
+}
+
+/* Admin is the intake point for every new order — regular bookings AND custom design
+   requests. The tailor never sees an unaccepted order; once admin accepts (or sends a
+   quote and the customer accepts it), it shows up in that shop's "Today's Bookings". */
+function renderAdminRequests(){
+  const container = document.getElementById('admin-new-requests');
+  if (!container) return;
+  let html = '';
+
+  customRequests.forEach((r, i) => {
+    html +=
+      '<div class="card">' +
+        '<div class="tailor-top"><div><div class="tailor-name"><i class="fas fa-palette" style="color:var(--marigold-dark);"></i>&nbsp; Custom ' + (r.type || 'Design') + ' Request</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">' + r.customer + ' · for ' + r.tailor + ' · #' + r.bookingId + '</div></div><span class="pill pill-sand">Awaiting Quote</span></div>' +
+        '<div class="req-photo-strip">' + Array(r.photos).fill('<div class="rp"><i class="fas fa-image"></i></div>').join('') + '</div>' +
+        '<div style="font-size:12.5px;color:var(--ink-soft);margin-top:10px;line-height:1.5;">"' + r.desc + '"</div>' +
+        '<div class="quote-row"><input type="number" placeholder="Quote price (₹)" id="quote-input-' + i + '"><div class="btn btn-primary btn-sm" style="width:auto;padding:0 16px;" onclick="adminSendCustomQuote(' + i + ')">Send Quote</div></div>' +
+      '</div>';
+  });
+
+  if (!newRequests.length && !customRequests.length){
+    html += '<p style="text-align:center;color:var(--gray);font-size:12.5px;padding:20px 16px;">No orders waiting on approval right now.</p>';
+    container.innerHTML = html;
+    return;
+  }
+
+  html += newRequests.map((r,i) =>
+    '<div class="card">' +
+      '<div class="tailor-top"><div><div class="tailor-name">#' + r.id + '</div><div style="font-size:12px;color:var(--gray);margin-top:3px;">' + r.service + ' · ' + r.customer + ' · for ' + r.tailor + '</div></div></div>' +
+      '<div class="btn-row" style="margin-top:12px;">' +
+        '<div class="btn btn-primary btn-sm" onclick="adminRespondRequest(' + i + ', true)">Accept</div>' +
+        '<div class="btn btn-danger-outline btn-sm" onclick="adminRespondRequest(' + i + ', false)">Reject</div>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+
+  container.innerHTML = html;
+}
+
+/* Once admin accepts/sends a quote, drop a card straight into that shop's job list so it's
+   there next time the Tailor persona opens their dashboard (demo-style cross-screen update). */
+function pushIntoTailorDashboard(customerName, serviceLine, timeLabel){
+  const container = document.getElementById('tailor-dash-bookings-list');
+  if (!container) return;
+  const card = document.createElement('div');
+  card.className = 'list-row';
+  card.innerHTML =
+    '<div class="icon-box"><i class="fas fa-user"></i></div>' +
+    '<div><div class="row-title">' + customerName + '</div><div class="row-sub">' + serviceLine + (timeLabel ? (' · ' + timeLabel) : '') + '</div></div>' +
+    '<span class="pill pill-sky">Accepted</span>';
+  container.prepend(card);
+}
+
+function adminSendCustomQuote(i){
+  const req = customRequests[i];
+  if (!req) return;
+  const input = document.getElementById('quote-input-' + i);
+  const price = parseInt(input.value);
+  if (!price || price <= 0){ alert('Please enter a valid quote amount.'); return; }
+
+  const b = bookings[req.bookingId];
+  if (b){
+    b.price = '₹' + price;
+    b.status = 'Quote Sent';
+  }
+
+  pushNotification('fa-indian-rupee-sign', req.tailor + ' sent a quote: ₹' + price, 'For your custom design request');
+  sendWhatsApp(req.tailor + ' sent you a quote of ₹' + price + ' for your custom design. Open the app to confirm.');
+  alert('Quote of ₹' + price + ' sent to ' + req.customer + ' for the order at ' + req.tailor + '.');
+
+  customRequests.splice(i,1);
+  renderAdminRequests();
+  renderMyBookings();
+}
+
+function adminRespondRequest(i, accept){
+  const r = newRequests[i];
+  if (accept){
+    if (bookings[r.id]) bookings[r.id].status = 'Accepted';
+    pushNotification('fa-check', r.tailor + ' confirmed your order #' + r.id, 'Approved by Tailor Wala admin');
+    sendWhatsApp('Your order #' + r.id + ' was accepted and assigned to ' + r.tailor + '.');
+    pushIntoTailorDashboard(r.customer, r.service, 'Today');
+    alert('Order accepted and assigned to ' + r.tailor + '. The customer has been notified.');
+  } else {
+    pushNotification('fa-xmark', 'Your order #' + r.id + ' could not be accepted', 'Please try a different tailor or time');
+    sendWhatsApp('Your order #' + r.id + ' was declined. Please try again with a different tailor or slot.');
+    alert('Order rejected.');
+  }
+  newRequests.splice(i,1);
+  renderAdminRequests();
+}
+
+/* ---------- reviews screens ---------- */
+function renderTailorReviewsScreen(){
+  const list = tailorReviews['ABC Tailors'];
+  document.getElementById('tr-count').textContent = list.length;
+  document.getElementById('tailor-reviews-list').innerHTML = renderReviewCards(list);
+}
+
+const origShowScreen = showScreen;
+showScreen = function(id){
+  origShowScreen(id);
+  if (id === 'reviews'){
+    const list = tailorReviews[selectedTailorName] || tailorReviews['ABC Tailors'];
+    document.getElementById('reviews-sub').textContent = selectedTailorName + ' · ' + (list.reduce((a,r)=>a+r.stars,0)/list.length).toFixed(1) + ' average (' + list.length + ' reviews)';
+    document.getElementById('reviews-full-list').innerHTML = renderReviewCards(list);
+  }
+  if (id === 'my-bookings') renderMyBookings();
+  if (id === 'tailor-reviews') renderTailorReviewsScreen();
+  if (id === 'tailor-dash') renderTailorDashLists();
+  if (id === 'admin-dashboard') renderAdminRequests();
+  if (id === 'customer-notifications') renderNotifications();
+  if (id === 'payment-select') openPaymentSelect();
+};
+
+/* re-route the book-appointment "Continue to Payment" without duplicating handlers */
+
 /* initial render on load */
 renderCustomerServiceTiles();
 renderAdminServices();
 renderServiceSelects();
 renderAdminTailors();
+renderMyBookings();
+renderTailorDocBanner();
 </script>
 </body>
 </html>
